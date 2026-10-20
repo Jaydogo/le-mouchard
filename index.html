@@ -678,12 +678,15 @@
   const DAY = 86400000;
 
   const CATS = {
-    lost:         { short:'Partis',        label:'Ont arrêté de te suivre', desc:"Ils te suivaient à l'export précédent, plus maintenant.", dot:'var(--accent)', av:'var(--rose)', avInk:'var(--bordeaux)' },
+    lost:         { short:'Partis',        label:'Ont arrêté de te suivre', desc:"Vrais départs : ils te suivaient à l'export précédent, plus maintenant. Les changements de pseudo et les comptes disparus sont mis à part.", dot:'var(--accent)', av:'var(--rose)', avInk:'var(--bordeaux)' },
     gained:       { short:'Arrivés',       label:"T'ont suivi depuis",      desc:"Nouveaux abonnés apparus depuis l'export précédent.", dot:'var(--sage-ink)', av:'var(--sage)', avInk:'var(--sage-ink)' },
     notFollowBack:{ short:'Sans retour',   label:'Ne suit pas en retour',   desc:"Tu les suis, ils ne te suivent pas. Triés du plus ancien suivi au plus récent.", dot:'var(--bordeaux)', av:'var(--soft)', avInk:'var(--bordeaux)' },
     ghosts:       { short:'Fantômes',      label:'Comptes fantômes',        desc:"Des comptes que tu suis mais qui ont été désactivés ou supprimés — inutile de les garder.", dot:'transparent; box-shadow:inset 0 0 0 1.5px var(--muted)', av:'var(--ink)', avInk:'var(--cream)' },
     unfollowed:   { short:'Tu as quitté',  label:'Tu as quitté',            desc:"Des comptes que tu suivais et que tu ne suis plus.", dot:'var(--muted)', av:'var(--paper)', avInk:'var(--muted)' },
-    followed:     { short:'Tu suis depuis',label:'Tu suis depuis',          desc:"Des comptes que tu as commencé à suivre depuis l'export précédent.", dot:'var(--ink)', av:'var(--soft)', avInk:'var(--ink)' }
+    followed:     { short:'Tu suis depuis',label:'Tu suis depuis',          desc:"Des comptes que tu as commencé à suivre depuis l'export précédent.", dot:'var(--ink)', av:'var(--soft)', avInk:'var(--ink)' },
+    renamed:      { short:'Pseudo changé', label:'Ont changé de pseudo',    desc:"Même compte, nouveau pseudo : repéré grâce à la date de suivi identique à la seconde près. Pas compté comme un départ.", dot:'var(--lime); box-shadow:inset 0 0 0 1.5px var(--ink)', av:'var(--lime)', avInk:'var(--ink)' },
+    vanished:     { short:'Disparus',      label:'Comptes disparus',        desc:"Partis de tes abonnés ET de tes abonnements en même temps : compte désactivé, supprimé, ou qui t'a bloqué. Pas compté comme un unfollow.", dot:'transparent; box-shadow:inset 0 0 0 1.5px var(--bordeaux)', av:'var(--paper)', avInk:'var(--muted)' },
+    returned:     { short:'Revenus',       label:'Comptes revenus',         desc:"Réapparus avec leur date de suivi d'origine : compte réactivé, pas un nouvel abonné.", dot:'var(--sage-ink)', av:'var(--sage)', avInk:'var(--sage-ink)' }
   };
   const EMPTY = {
     lost:"Personne ne t'a lâché. Propre.",
@@ -691,7 +694,10 @@
     notFollowBack:"Tout le monde te suit en retour. Rare.",
     unfollowed:"Tu n'as quitté personne.",
     followed:"Tu n'as suivi personne de nouveau.",
-    ghosts:"Aucun compte fantôme. Ton feed est clean."
+    ghosts:"Aucun compte fantôme. Ton feed est clean.",
+    renamed:"Personne n'a changé de pseudo.",
+    vanished:"Aucun compte disparu.",
+    returned:"Aucun compte revenu."
   };
 
   const sets = { of:null, og:null, nf:null, ng:null };
@@ -759,10 +765,47 @@
     diffs.ghosts = [...last.g].filter(([u])=>isGhost(u)).map(([u,v])=>({u, href:v.href, ts:v.ts})).sort((a,b)=>(a.ts||0)-(b.ts||0));
     if(n > 1){
       const prev = { f:toMap(history[n-2].followers), g:toMap(history[n-2].following) };
-      diffs.lost = only(prev.f, last.f);
-      diffs.gained = only(last.f, prev.f);
-      diffs.unfollowed = only(prev.g, last.g);
-      diffs.followed = only(last.g, prev.g);
+      let lost = only(prev.f, last.f), gained = only(last.f, prev.f);
+      let unf = only(prev.g, last.g), fol = only(last.g, prev.g);
+
+      // 1. Changement de pseudo : la date de suivi (à la seconde) ne change pas quand on se renomme.
+      const renamed = [], seenNew = new Set();
+      const pairUp = (gone, came) => {
+        const byTs = new Map();
+        came.forEach(x=>{ if(x.ts) byTs.set(x.ts, byTs.has(x.ts) ? null : x); });
+        const used = new Set(), rest = [];
+        gone.forEach(x=>{
+          const m = x.ts ? byTs.get(x.ts) : null;
+          if(m && !used.has(m.u)){
+            used.add(m.u);
+            if(!seenNew.has(m.u)){ seenNew.add(m.u); renamed.push({ u:m.u, from:x.u, href:m.href, ts:m.ts }); }
+          } else rest.push(x);
+        });
+        return [rest, came.filter(x=>!used.has(x.u))];
+      };
+      [lost, gained] = pairUp(lost, gained);
+      [unf, fol] = pairUp(unf, fol);
+      // Un renommé détecté d'un côté ne doit pas rester comme départ de l'autre.
+      const renamedFrom = new Set(renamed.map(r=>low(r.from))), renamedTo = new Set(renamed.map(r=>low(r.u)));
+      lost = lost.filter(x=>!renamedFrom.has(low(x.u))); unf = unf.filter(x=>!renamedFrom.has(low(x.u)));
+      gained = gained.filter(x=>!renamedTo.has(low(x.u))); fol = fol.filter(x=>!renamedTo.has(low(x.u)));
+
+      // 2. Disparus : partis des abonnés ET des abonnements d'un coup → désactivé, supprimé ou blocage.
+      const unfSet = new Set(unf.map(x=>low(x.u)));
+      const vanished = lost.filter(x=>unfSet.has(low(x.u)));
+      const vanishedSet = new Set(vanished.map(x=>low(x.u)));
+      lost = lost.filter(x=>!vanishedSet.has(low(x.u)));
+      unf = unf.filter(x=>!vanishedSet.has(low(x.u)));
+
+      // 3. Revenus : date de suivi antérieure à l'export précédent → compte réactivé, pas un nouvel abonné.
+      const prevSec = new Date(history[n-2].date).getTime()/1000 - DAY/1000;
+      const returned = gained.filter(x=>x.ts && x.ts < prevSec);
+      gained = gained.filter(x=>!(x.ts && x.ts < prevSec));
+
+      diffs.lost = lost; diffs.gained = gained;
+      diffs.unfollowed = unf; diffs.followed = fol;
+      diffs.renamed = renamed.sort((a,b)=>a.u.localeCompare(b.u));
+      diffs.vanished = vanished; diffs.returned = returned;
     }
   }
 
@@ -798,7 +841,7 @@
     const n = na ? 0 : list.length;
     const sub = na ? 'au prochain export'
       : k === 'notFollowBack' ? 'trié du plus ancien'
-      : k === 'ghosts' ? (n > 1 ? 'comptes supprimés' : 'compte supprimé')
+      : k === 'ghosts' ? (n === 0 ? 'aucun compte supprimé' : n > 1 ? 'comptes supprimés' : 'compte supprimé')
       : (n ? list.slice(0,2).map(x=>'@'+esc(x.u)).join(' · ') + (n>2?' +'+(n-2):'') : 'rien à signaler');
     // Taille du chiffre selon le nombre de chiffres, pour que la tuile ne déborde jamais.
     const digits = String(n).length;
@@ -867,6 +910,19 @@
       html += `<div class="caps section-label"><span>De ton côté</span><span>Abonnements</span></div><div class="rows">` +
         ['unfollowed','followed'].map((k,i)=>`
           <button class="row" data-k="${k}" style="animation-delay:${280+i*50}ms">
+            <span class="dot" style="background:${CATS[k].dot}"></span>
+            <span class="row-name">${CATS[k].label}</span>
+            <span class="row-count" data-count="${diffs[k].length}">0</span>
+            <span class="row-chev">›</span>
+          </button>`).join('') + `</div>`;
+    }
+
+    if(prev){
+      const fake = ['renamed','vanished','returned'];
+      const total = fake.reduce((t,k)=>t + diffs[k].length, 0);
+      html += `<div class="caps section-label"><span>Faux départs</span><span>${total ? total + ' écarté' + (total>1?'s':'') : 'aucun'}</span></div><div class="rows">` +
+        fake.map((k,i)=>`
+          <button class="row" data-k="${k}" style="animation-delay:${320+i*50}ms">
             <span class="dot" style="background:${CATS[k].dot}"></span>
             <span class="row-name">${CATS[k].label}</span>
             <span class="row-count" data-count="${diffs[k].length}">0</span>
@@ -1071,7 +1127,7 @@
   function renderPeople(){
     const q = $('q').value.trim().toLowerCase();
     const order = $('sort').value;
-    let list = (diffs[tab]||[]).filter(x=>!q || x.u.toLowerCase().includes(q));
+    let list = (diffs[tab]||[]).filter(x=>!q || x.u.toLowerCase().includes(q) || (x.from && x.from.toLowerCase().includes(q)));
     list = [...list];
     if(order==='az') list.sort((a,b)=>a.u.localeCompare(b.u));
     else if(order==='za') list.sort((a,b)=>b.u.localeCompare(a.u));
@@ -1095,7 +1151,8 @@
         <span class="person-av" style="background:${c.av}; color:${c.avInk}">${esc(p.u.replace(/^_+/,'').slice(0,2).toUpperCase())}</span>
         <span class="person-body">
           <span class="person-handle">@${esc(p.u)}</span>
-          ${p.ts ? `<span class="person-date">${human(new Date(p.ts*1000).toISOString())}</span>` : ''}
+          ${p.from ? `<span class="person-date">avant : @${esc(p.from)}</span>`
+            : p.ts ? `<span class="person-date">${human(new Date(p.ts*1000).toISOString())}</span>` : ''}
         </span>
         ${isGhost(p.u) ? '' : `<a class="person-go" href="${esc(href)}" target="_blank" rel="noopener" aria-label="Ouvrir le profil"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"/><path d="M8 7h9v9"/></svg></a>`}`;
       frag.appendChild(el);
