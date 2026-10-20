@@ -108,7 +108,7 @@
 
   /* ── barres : verre dépoli, collantes ─────────── */
   .topbar{
-    position:sticky; top:0; z-index:30; view-transition-name:topbar;
+    position:sticky; top:0; z-index:30;
     height:calc(56px + var(--sat)); padding:var(--sat) 12px 0;
     display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:8px;
     background:rgba(243,237,227,.55);
@@ -149,7 +149,7 @@
   .on-upload .tb-icon{opacity:0; pointer-events:none; transform:scale(.6);}
 
   .tabbar{
-    position:fixed; z-index:40; view-transition-name:tabbar;
+    position:fixed; z-index:40;
     left:50%; bottom:calc(12px + var(--sab)); transform:translateX(-50%);
     width:min(calc(100% - 32px), 360px); height:64px; padding:6px; border-radius:999px;
     display:grid; grid-template-columns:repeat(3,1fr);
@@ -197,23 +197,6 @@
   .toast.show{transform:translate(-50%,0) scale(1); opacity:1;}
   .toast i{width:22px; height:22px; border-radius:50%; background:var(--lime); color:var(--ink); display:flex; align-items:center; justify-content:center; font-style:normal; font-size:.75rem;}
 
-  /* Transitions entre écrans (View Transitions API, sinon CSS) */
-  #pages{view-transition-name:page;}
-  ::view-transition-old(topbar), ::view-transition-old(tabbar){display:none;}
-  ::view-transition-new(topbar), ::view-transition-new(tabbar){animation:none;}
-  ::view-transition-old(page){animation:vtOutTab .22s var(--spring) both;}
-  ::view-transition-new(page){animation:vtInTab .5s var(--spring) both;}
-  html[data-dir="push"]::view-transition-old(page){animation:vtOutPush .45s var(--spring) both;}
-  html[data-dir="push"]::view-transition-new(page){animation:vtInPush .5s var(--spring) both;}
-  html[data-dir="pop"]::view-transition-old(page){animation:vtOutPop .45s var(--spring) both;}
-  html[data-dir="pop"]::view-transition-new(page){animation:vtInPop .5s var(--spring) both;}
-  @keyframes vtOutTab{to{opacity:0; transform:scale(.985);}}
-  @keyframes vtInTab{from{opacity:0; transform:translateY(10px) scale(.99);}}
-  @keyframes vtOutPush{to{opacity:0; transform:translateX(-28%);}}
-  @keyframes vtInPush{from{opacity:0; transform:translateX(40%);}}
-  @keyframes vtOutPop{to{opacity:0; transform:translateX(40%);}}
-  @keyframes vtInPop{from{opacity:0; transform:translateX(-28%);}}
-
   /* ── motion ───────────────────────────────────── */
   @keyframes screenIn{from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:none;}}
   @keyframes screenInBack{from{opacity:0; transform:translateX(-16px);} to{opacity:1; transform:none;}}
@@ -223,6 +206,8 @@
   @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(220,241,91,.6);} 100%{box-shadow:0 0 0 12px rgba(220,241,91,0);}}
   .screen-anim{animation:screenIn .55s var(--spring) both;}
   .screen-anim-back{animation:screenInBack .5s var(--spring) both;}
+  .screen-push{animation:screenInPush .5s var(--spring) both;}
+  @keyframes screenInPush{from{opacity:0; transform:translateX(28px);} to{opacity:1; transform:none;}}
   .rise{animation:fadeUp .7s var(--spring) both;}
   @media (prefers-reduced-motion:reduce){
     *,*::before,*::after{animation-duration:.01ms !important; transition-duration:.01ms !important;}
@@ -1119,7 +1104,7 @@
   let current = 'screen-home';
 
   function animate(el, cls){
-    el.classList.remove('screen-anim','screen-anim-back');
+    el.classList.remove('screen-anim','screen-anim-back','screen-push');
     void el.offsetWidth;
     el.classList.add(cls);
   }
@@ -1144,9 +1129,9 @@
       lastY = 0; setCompact(false);
       updateChrome();
     };
-    document.documentElement.dataset.dir = dir;
-    if(document.startViewTransition && !reduced) document.startViewTransition(apply);
-    else { apply(); animate($(id), dir === 'pop' ? 'screen-anim-back' : 'screen-anim'); }
+    // Animations CSS (pas de View Transitions) : la barre d'onglets reste vivante pendant le changement.
+    apply();
+    if(!reduced) animate($(id), dir === 'pop' ? 'screen-anim-back' : dir === 'push' ? 'screen-push' : 'screen-anim');
   }
 
   // Grand titre façon iOS : le petit titre apparaît dans la barre quand le grand sort de l'écran.
