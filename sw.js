@@ -1,5 +1,5 @@
 // Le Mouchard — service worker : l'app marche hors ligne une fois ouverte.
-const VERSION = 'mouchard-v6';
+const VERSION = 'mouchard-v7';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icons/icon.svg', './icons/icon-192.png', './icons/apple-touch-icon.png'];
 
 self.addEventListener('install', e => {

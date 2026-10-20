@@ -159,19 +159,26 @@
     box-shadow:0 12px 36px rgba(26,20,18,.16), 0 2px 6px rgba(26,20,18,.06), inset 0 1px 0 rgba(255,255,255,.7);
     -webkit-user-select:none; user-select:none;
     animation:tabbarIn .8s var(--spring) both .15s;
+    transition:width .55s var(--spring), height .55s var(--spring), padding .55s var(--spring), bottom .55s var(--spring);
   }
+  /* Au scroll vers le bas : barre rétractée, pictos seuls */
+  .tabbar.compact{width:min(calc(100% - 32px), 212px); height:52px; padding:5px; bottom:calc(16px + var(--sab));}
+  .tabbar.compact .tab-ind{top:5px; bottom:5px; left:5px; width:calc((100% - 10px) / 3);}
+  .tab span{display:block; max-height:14px; line-height:14px; overflow:hidden; transition:opacity .25s var(--spring), max-height .45s var(--spring);}
+  .tabbar.compact .tab{gap:0;}
+  .tabbar.compact .tab span{opacity:0; max-height:0;}
   @keyframes tabbarIn{from{opacity:0; transform:translate(-50%,30px) scale(.94);} to{opacity:1; transform:translateX(-50%);}}
   .tab-ind{
     position:absolute; top:6px; bottom:6px; left:6px; width:calc((100% - 12px) / 3); border-radius:999px;
     background:var(--ink); box-shadow:0 4px 14px rgba(26,20,18,.25);
     transform:translateX(calc(var(--i, 0) * 100%));
-    transition:transform .55s var(--spring);
+    transition:transform .55s var(--spring), width .55s var(--spring), top .55s var(--spring), bottom .55s var(--spring), left .55s var(--spring);
   }
   .tab{
     position:relative; z-index:1; border:none; background:none; cursor:pointer; border-radius:999px;
     display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
     color:var(--muted); font-size:.6875rem; font-weight:600; letter-spacing:.01em;
-    transition:color .35s var(--spring), transform .3s var(--spring);
+    transition:color .35s var(--spring), transform .3s var(--spring), gap .45s var(--spring);
   }
   .tab svg{width:22px; height:22px; transition:transform .45s var(--spring);}
   .tab.active{color:var(--cream);}
@@ -1134,6 +1141,7 @@
       SCREENS.forEach(s=> $(s).style.display = s === id ? 'block' : 'none');
       current = id;
       window.scrollTo(0, 0);
+      lastY = 0; setCompact(false);
       updateChrome();
     };
     document.documentElement.dataset.dir = dir;
@@ -1151,6 +1159,22 @@
       { rootMargin:'-60px 0px 0px 0px' });
     io.observe(t);
   }
+  // Barre d'onglets : se rétracte quand on descend, revient quand on remonte.
+  let lastY = 0, ticking = false;
+  const setCompact = on => $('tabbar').classList.toggle('compact', on);
+  window.addEventListener('scroll', ()=>{
+    if(ticking) return;
+    ticking = true;
+    requestAnimationFrame(()=>{
+      const y = window.scrollY, max = document.documentElement.scrollHeight - innerHeight;
+      if(y < 40) setCompact(false);
+      else if(y > lastY + 6 && y < max - 20) setCompact(true);
+      else if(y < lastY - 6) setCompact(false);
+      lastY = y; ticking = false;
+    });
+  }, { passive:true });
+  $('tabbar').addEventListener('click', ()=> setCompact(false));
+
   const haptic = () => { try{ navigator.vibrate && navigator.vibrate(8); }catch(e){} };
 
   document.querySelectorAll('.tab').forEach(t=>{
