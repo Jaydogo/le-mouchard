@@ -409,13 +409,14 @@
   .detail-count{display:flex; align-items:center; gap:8px;}
   .detail-desc{font-size:.875rem; line-height:1.55; color:var(--muted); margin-top:10px; max-width:38ch;}
   .controls{
-    position:sticky; top:calc(56px + var(--sat)); z-index:14;
-    background:linear-gradient(var(--cream) 78%, rgba(243,237,227,0));
-    padding:10px 0 14px; display:grid; grid-template-columns:1fr auto; gap:8px;
+    position:sticky; top:calc(62px + var(--sat)); z-index:14;
+    margin:6px 0 12px; padding:6px; border-radius:999px; display:grid; grid-template-columns:1fr auto; gap:6px;
+    background:var(--glass); border:1px solid var(--glass-line); -webkit-backdrop-filter:var(--blur); backdrop-filter:var(--blur);
+    box-shadow:0 8px 24px rgba(26,20,18,.06);
   }
   .field{
     width:100%; font-family:var(--sans); font-size:1rem; /* 16px : pas de zoom auto sur iOS */
-    padding:12px 18px; border:1px solid var(--line); border-radius:999px; background:var(--surface);
+    padding:11px 18px; border:1px solid transparent; border-radius:999px; background:rgba(255,255,255,.85);
     outline:none; color:var(--ink); appearance:none; -webkit-appearance:none;
   }
   .field:focus{border-color:var(--ink);}
@@ -553,12 +554,12 @@
 
         <div class="step"><span class="step-num">03</span><div class="step-body">
           <h3 class="step-title">Vos informations et autorisations</h3>
-          <div class="mock"><div class="mock-row"><span class="mock-ico">🗄</span><span class="mock-label">Vos informations et autorisations</span><span class="mock-chev">›</span></div></div>
+          <div class="mock"><div class="mock-row"><span class="mock-ico">▤</span><span class="mock-label">Vos informations et autorisations</span><span class="mock-chev">›</span></div></div>
         </div></div>
 
         <div class="step"><span class="step-num">04</span><div class="step-body">
           <h3 class="step-title">Exporter vos informations</h3>
-          <div class="mock"><div class="mock-row"><span class="mock-label">Exporter vos informations</span><span class="mock-chev">↗</span></div></div>
+          <div class="mock"><div class="mock-row"><span class="mock-label">Exporter vos informations</span><span class="mock-chev">↗&#xFE0E;</span></div></div>
           <p class="step-text">Puis sur l'écran suivant, appuie sur le bouton bleu <b>Créer une exportation</b>.</p>
           <div class="mock"><div class="mock-btn">Créer une exportation</div></div>
         </div></div>
@@ -1096,7 +1097,7 @@
           <span class="person-handle">@${esc(p.u)}</span>
           ${p.ts ? `<span class="person-date">${human(new Date(p.ts*1000).toISOString())}</span>` : ''}
         </span>
-        ${isGhost(p.u) ? '' : `<a class="person-go" href="${esc(href)}" target="_blank" rel="noopener" aria-label="Ouvrir le profil">↗</a>`}`;
+        ${isGhost(p.u) ? '' : `<a class="person-go" href="${esc(href)}" target="_blank" rel="noopener" aria-label="Ouvrir le profil"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"/><path d="M8 7h9v9"/></svg></a>`}`;
       frag.appendChild(el);
     });
     wrap.appendChild(frag);
