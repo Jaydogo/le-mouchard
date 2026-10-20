@@ -1,0 +1,10 @@
+# Exports Instagram personnels — ne jamais publier
+EXPORT/
+*.zip
+connections/
+followers_*.json
+following.json
+
+.DS_Store
+*.old.html
+.claude/

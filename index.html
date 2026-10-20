@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#F3EDE3">
+<meta name="description" content="Découvre qui ne te suit pas en retour sur Instagram, sans mot de passe. Tout reste sur ton téléphone.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Mouchard">
+<title>Le Mouchard</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+  /* Jetons alignés sur Daké Studio / Face */
+  :root{
+    color-scheme:light;
+    --cream:#F3EDE3;
+    --paper:#F8F7F5;
+    --surface:#FFFFFF;
+    --soft:#EAE2D6;
+    --ink:#1A1412;
+    --muted:#7A6A62;
+    --accent:#C10707;
+    --bordeaux:#77120D;
+    --sage:#B5C0A0;
+    --sage-ink:#2F3A24;
+    --line:rgba(26,20,18,.14);
+    --line-strong:rgba(26,20,18,.8);
+    --wash:rgba(119,18,13,.06);
+    --sans:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
+    --serif:"Newsreader",Georgia,serif;
+    --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+    --ease:cubic-bezier(.22,.8,.2,1);
+    --gut:20px;
+    --sat:env(safe-area-inset-top, 0px);
+    --sab:env(safe-area-inset-bottom, 0px);
+  }
+  *,*::before,*::after{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0; padding:0; overflow-x:hidden;}
+  body{
+    background:var(--cream); color:var(--ink);
+    font-family:var(--sans); font-size:1rem; line-height:1.5;
+    min-height:100dvh; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  }
+  button{font:inherit; color:inherit;}
+  h1,h2,h3,p{margin:0;}
+  :focus-visible{outline:2px solid var(--bordeaux); outline-offset:3px;}
+  .device{position:relative; width:100%; max-width:520px; min-height:100dvh; margin:0 auto; background:var(--cream);}
+  @media (min-width:560px){
+    .device{border-left:1px solid var(--line); border-right:1px solid var(--line);}
+  }
+
+  /* ── primitives ───────────────────────────────── */
+  .caps{font-family:var(--mono); font-size:.6875rem; font-weight:500; letter-spacing:.12em; text-transform:uppercase; line-height:1.5;}
+  .muted{color:var(--muted);}
+  .serif{font-family:var(--serif); font-weight:300; letter-spacing:-.035em; line-height:.95;}
+  .serif em{font-style:italic;}
+  .num{font-variant-numeric:tabular-nums;}
+  .folio{display:grid; grid-template-columns:1fr auto 1fr; gap:12px; white-space:nowrap; color:var(--muted);}
+  .folio span:nth-child(2){text-align:center;}
+  .folio span:nth-child(3){text-align:right;}
+
+  .btn{
+    display:flex; align-items:center; justify-content:space-between; gap:.6em; width:100%;
+    min-height:56px; padding:0 26px; border-radius:999px; border:1px solid var(--ink);
+    background:var(--ink); color:var(--cream); cursor:pointer;
+    font-family:var(--sans); font-size:1rem; font-weight:500; line-height:1.2;
+    transition:background-color .35s var(--ease), border-color .35s var(--ease), opacity .35s var(--ease), transform .35s var(--ease);
+  }
+  .btn .arrow{font-family:var(--mono); transition:transform .35s var(--ease);}
+  @media (hover:hover){
+    .btn:not(:disabled):hover{background:var(--bordeaux); border-color:var(--bordeaux);}
+    .btn:not(:disabled):hover .arrow{transform:translateX(4px);}
+  }
+  .btn:not(:disabled):active{transform:scale(.98);}
+  .btn:disabled{opacity:.3; cursor:default;}
+  .btn--ghost{background:transparent; color:var(--ink);}
+  @media (hover:hover){ .btn--ghost:not(:disabled):hover{background:var(--ink); color:var(--cream); border-color:var(--ink);} }
+  .btn--s{min-height:40px; padding:0 16px; font-size:.875rem; justify-content:center;}
+
+  .pill{
+    display:inline-flex; align-items:center; border:1px solid currentColor; border-radius:999px;
+    padding:.15em .6em; font-family:var(--mono); font-size:.625rem; font-weight:500; letter-spacing:.1em; line-height:1.4;
+  }
+  .lock{margin-left:6px; vertical-align:1px;}
+
+  .dot{display:inline-block; width:8px; height:8px; border-radius:50%; flex-shrink:0;}
+
+  /* ── app chrome ───────────────────────────────── */
+  .topbar{
+    position:sticky; top:0; z-index:20;
+    padding:calc(14px + var(--sat)) var(--gut) 14px;
+    background:rgba(243,237,227,.86); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+  }
+  .brand{display:flex; align-items:baseline; gap:8px; font-family:var(--serif); font-size:1.375rem; font-weight:400; letter-spacing:-.03em; line-height:1;}
+  .brand em{font-style:italic; font-weight:300;}
+  .icon-btn{
+    min-height:36px; padding:0 14px; border-radius:999px; border:1px solid var(--line-strong); background:transparent;
+    display:flex; align-items:center; gap:6px; cursor:pointer;
+    font-family:var(--mono); font-size:.625rem; font-weight:500; letter-spacing:.12em; text-transform:uppercase;
+    transition:background-color .3s var(--ease), color .3s var(--ease);
+  }
+  @media (hover:hover){ .icon-btn:hover{background:var(--ink); color:var(--cream);} }
+
+  .screen{padding:28px var(--gut) calc(32px + var(--sab));}
+  .page-head{margin-bottom:28px;}
+  .page-title{font-size:clamp(2.75rem,13vw,3.75rem); margin:0 0 14px;}
+  .page-sub{font-size:.9375rem; color:var(--muted); line-height:1.55; max-width:36ch;}
+  .page-sub b{color:var(--ink); font-weight:600;}
+
+  /* ── splash ───────────────────────────────────── */
+  .splash{
+    min-height:100dvh; display:flex; flex-direction:column;
+    padding:calc(18px + var(--sat)) var(--gut) calc(20px + var(--sab));
+  }
+  .splash-mid{flex:1; display:flex; flex-direction:column; justify-content:center; padding:20px 0 18px;}
+  .splash-kicker{color:var(--muted); margin-bottom:18px; display:flex; align-items:center; gap:8px;}
+  .splash-kicker .dot{background:var(--accent); width:6px; height:6px;}
+  .splash-title{font-size:clamp(3.2rem,16vw,5rem); margin:0 0 14px;}
+  .splash-lede{font-size:1rem; color:var(--muted); line-height:1.5; max-width:34ch; margin-bottom:20px;}
+
+  .compare{border-top:1px solid var(--line-strong); margin-bottom:18px;}
+  .compare-row{display:grid; grid-template-columns:96px 1fr; gap:14px; padding:11px 0; border-bottom:1px solid var(--line);}
+  .compare-row .caps{padding-top:2px;}
+  .compare-row p{font-size:.8125rem; line-height:1.5; color:var(--muted);}
+  .compare-row p b{color:var(--ink); font-weight:600;}
+  .compare-row.bad .caps{color:var(--accent);}
+  .compare-row.good .caps{color:var(--ink);}
+
+  .strip{display:grid; grid-template-columns:1fr 1fr; border-top:1px solid var(--line); border-left:1px solid var(--line);}
+  .strip-cell{
+    position:relative; padding:11px 12px 12px; border-right:1px solid var(--line); border-bottom:1px solid var(--line);
+    display:flex; flex-direction:column; gap:10px;
+  }
+  .strip-cell .n{font-family:var(--mono); font-size:.625rem; letter-spacing:.12em; color:var(--muted); display:flex; justify-content:space-between; align-items:center;}
+  .strip-cell .t{font-family:var(--serif); font-size:1.375rem; font-weight:300; letter-spacing:-.03em; line-height:1;}
+  .strip-cell .t em{font-style:italic;}
+
+  .splash-foot{text-align:center; color:var(--muted); margin-top:14px;}
+
+  /* ── motion ───────────────────────────────────── */
+  @keyframes screenIn{from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:none;}}
+  @keyframes screenInBack{from{opacity:0; transform:translateX(-16px);} to{opacity:1; transform:none;}}
+  @keyframes fadeUp{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:none;}}
+  @keyframes checkPop{0%{transform:scale(0);} 65%{transform:scale(1.2);} 100%{transform:scale(1);}}
+  .screen-anim{animation:screenIn .5s var(--ease) both;}
+  .screen-anim-back{animation:screenInBack .4s var(--ease) both;}
+  .rise{animation:fadeUp .6s var(--ease) both;}
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms !important; transition-duration:.01ms !important;}
+  }
+
+  /* ── segmented ────────────────────────────────── */
+  .segmented{display:flex; gap:4px; border:1px solid var(--line-strong); border-radius:999px; padding:4px; margin-bottom:24px;}
+  .seg{
+    flex:1; border:none; background:transparent; cursor:pointer; border-radius:999px; padding:11px 8px;
+    font-size:.875rem; font-weight:500; color:var(--muted);
+    transition:background-color .35s var(--ease), color .35s var(--ease);
+  }
+  .seg.active{background:var(--ink); color:var(--cream);}
+
+  /* ── mode info ────────────────────────────────── */
+  .mode-info{margin-bottom:22px; animation:fadeUp .45s var(--ease) both;}
+  .mi-head{display:flex; align-items:center; justify-content:space-between; padding-bottom:10px; border-bottom:1px solid var(--line-strong);}
+  .mi-list{display:flex; flex-direction:column;}
+  .mi-item{display:grid; grid-template-columns:22px 1fr; gap:8px; padding:10px 0; border-bottom:1px solid var(--line); font-size:.875rem; line-height:1.45;}
+  .mi-item .b{font-family:var(--mono); font-size:.75rem; color:var(--muted); padding-top:1px;}
+  .mi-item.yes b{font-weight:600;}
+  .mi-item.no{color:var(--muted);}
+  .mi-item.no .b{color:var(--accent);}
+  .mi-note{margin-top:12px; font-size:.8125rem; line-height:1.55; color:var(--muted);}
+
+  /* ── helper link ──────────────────────────────── */
+  .helper-link{
+    width:100%; background:var(--paper); border:1px solid var(--line); border-radius:18px;
+    padding:16px 18px; display:flex; align-items:center; gap:14px; cursor:pointer; text-align:left; margin-bottom:28px;
+    transition:border-color .3s var(--ease), background-color .3s var(--ease);
+  }
+  @media (hover:hover){ .helper-link:hover{border-color:var(--ink);} }
+  .helper-link:active{transform:scale(.99);}
+  .helper-body{flex:1; min-width:0; display:flex; flex-direction:column; gap:3px;}
+  .helper-title{font-family:var(--serif); font-size:1.25rem; font-weight:400; letter-spacing:-.025em; line-height:1.1;}
+  .helper-title em{font-style:italic; font-weight:300;}
+  .helper-sub{font-size:.8125rem; color:var(--muted);}
+  .helper-go{font-family:var(--mono); flex-shrink:0; width:36px; height:36px; border-radius:50%; border:1px solid var(--line-strong); display:flex; align-items:center; justify-content:center; font-size:.875rem;}
+
+  /* ── zones ────────────────────────────────────── */
+  .section-label{display:flex; justify-content:space-between; color:var(--muted); padding-bottom:10px; border-bottom:1px solid var(--line-strong);}
+  .stack{display:flex; flex-direction:column; margin-bottom:28px;}
+  .zone{
+    display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:14px;
+    padding:16px 4px; border-bottom:1px solid var(--line); cursor:pointer;
+    transition:background-color .35s var(--ease), padding .35s var(--ease);
+  }
+  .zone input{display:none;}
+  .zone.dragover{background:var(--wash);}
+  .zone-ico{
+    width:40px; height:40px; border-radius:50%; border:1px dashed var(--line-strong);
+    display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:1rem;
+    transition:background-color .35s var(--ease), border-color .35s var(--ease), color .35s var(--ease);
+  }
+  .zone-body{min-width:0;}
+  .zone-name{display:block; font-family:var(--serif); font-size:1.375rem; font-weight:400; letter-spacing:-.025em; line-height:1.1;}
+  .zone-hint{display:block; font-family:var(--mono); font-size:.6875rem; color:var(--muted); margin-top:3px; word-break:break-word;}
+  .zone-cta{font-family:var(--mono); font-size:.625rem; letter-spacing:.12em; text-transform:uppercase; border:1px solid var(--line-strong); border-radius:999px; padding:6px 11px; white-space:nowrap;}
+  .zone.filled .zone-ico{background:var(--ink); border:1px solid var(--ink); color:var(--cream);}
+  .zone.filled .zone-ico::after{content:'✓'; animation:checkPop .45s var(--ease) both;}
+  .zone.filled .zone-ico span{display:none;}
+  .zone.filled .zone-hint{color:var(--ink);}
+  .zone.filled .zone-cta{border-color:var(--line); color:var(--muted);}
+
+  .sticky-cta{
+    position:sticky; bottom:0; z-index:15;
+    padding:18px 0 calc(14px + var(--sab));
+    background:linear-gradient(180deg, rgba(243,237,227,0), var(--cream) 30%);
+  }
+  .note{
+    background:var(--wash); border-left:2px solid var(--bordeaux); padding:12px 14px; margin-bottom:18px;
+    font-size:.875rem; line-height:1.5; color:var(--bordeaux); display:none;
+  }
+
+  /* ── memory card ──────────────────────────────── */
+  .memory{background:var(--surface); border:1px solid var(--line); border-radius:18px; padding:18px; margin-bottom:28px;}
+  .memory-head{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:14px;}
+  .memory-date{font-family:var(--serif); font-size:1.5rem; font-weight:300; letter-spacing:-.03em; line-height:1;}
+  .chips{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:16px;}
+  .chip{border:1px solid var(--line); border-radius:999px; padding:5px 11px; font-size:.75rem; color:var(--muted);}
+  .chip b{color:var(--ink); font-weight:600;}
+  .memory-actions{display:flex; gap:8px;}
+  .memory-actions .btn{flex:1; width:auto;}
+
+  /* ── tuto ─────────────────────────────────────── */
+  .back{
+    display:inline-flex; align-items:center; gap:8px; background:none; border:none; cursor:pointer;
+    color:var(--muted); padding:0 0 22px; font-family:var(--mono);
+    font-size:.6875rem; font-weight:500; letter-spacing:.12em; text-transform:uppercase;
+    transition:color .3s var(--ease), transform .3s var(--ease);
+  }
+  @media (hover:hover){ .back:hover{color:var(--ink); transform:translateX(-3px);} }
+  .tuto-warn{border-top:1px solid var(--line-strong); border-bottom:1px solid var(--line); padding:14px 0; margin-bottom:28px; font-size:.875rem; line-height:1.55; color:var(--muted);}
+  .tuto-warn b{color:var(--ink); font-weight:600;}
+  .steps{display:flex; flex-direction:column;}
+  .step{display:grid; grid-template-columns:44px 1fr; gap:4px 12px; padding:20px 0; border-bottom:1px solid var(--line); animation:fadeUp .5s var(--ease) both;}
+  .step-num{grid-row:span 3; font-family:var(--serif); font-size:1.75rem; font-weight:300; letter-spacing:-.04em; line-height:1; color:var(--muted);}
+  .step.key .step-num{color:var(--accent); font-style:italic;}
+  .step-title{font-family:var(--serif); font-size:1.375rem; font-weight:400; letter-spacing:-.025em; line-height:1.15; margin-bottom:6px;}
+  .step-body{display:flex; flex-direction:column; gap:10px;}
+  .step-text{font-size:.875rem; line-height:1.55; color:var(--muted);}
+  .step-text b{color:var(--ink); font-weight:600;}
+  .key-tag{color:var(--accent); margin-bottom:2px;}
+
+  /* Maquettes de l'écran Instagram — gardent le bleu Meta pour être reconnaissables */
+  .mock{background:var(--surface); border:1px solid var(--line); border-radius:14px; overflow:hidden;}
+  .mock-top{display:flex; align-items:center; justify-content:space-between; padding:10px 13px 6px;}
+  .mock-section{font-weight:600; font-size:.8125rem;}
+  .mock-meta,.mock-blue{font-size:.6875rem; font-weight:600; color:#0866FF;}
+  .mock-row{display:flex; align-items:center; gap:10px; padding:11px 13px; border-top:1px solid var(--line);}
+  .mock-row:first-child{border-top:none;}
+  .mock-row.hl{background:var(--soft);}
+  .mock-row.dim{opacity:.45;}
+  .mock-ico{font-size:.875rem; flex-shrink:0; width:20px; text-align:center;}
+  .mock-label{flex:1; min-width:0; font-weight:500; font-size:.8125rem; display:flex; flex-direction:column; gap:2px;}
+  .mock-label em{font-style:normal; font-weight:400; font-size:.6875rem; color:var(--muted); line-height:1.35;}
+  .mock-chev{color:var(--muted); font-size:.875rem; flex-shrink:0;}
+  .mock-ok{color:var(--ink); font-size:.8125rem; font-weight:600; flex-shrink:0;}
+  .mock-box{width:19px; height:19px; border-radius:5px; border:1.5px solid #B9B6AC; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:.6875rem; color:#fff;}
+  .mock-box.on{background:#0866FF; border-color:#0866FF;}
+  .mock-radio{width:19px; height:19px; border-radius:50%; border:1.5px solid #B9B6AC; flex-shrink:0; position:relative;}
+  .mock-radio.on{border:2px solid #0866FF;}
+  .mock-radio.on::after{content:''; position:absolute; inset:2.5px; border-radius:50%; background:#0866FF;}
+  .mock-btn{background:#0866FF; color:#fff; text-align:center; padding:11px; margin:11px 13px 13px; border-radius:999px; font-weight:600; font-size:.8125rem;}
+  .path{background:var(--ink); color:var(--cream); border-radius:14px; padding:13px 15px; font-family:var(--mono); font-size:.6875rem; line-height:1.7; word-break:break-word;}
+  .path b{color:var(--sage); font-weight:500;}
+
+  /* ── paywall ──────────────────────────────────── */
+  .pay-list{border-top:1px solid var(--line-strong); margin-bottom:28px;}
+  .pay-item{display:grid; grid-template-columns:32px 1fr; gap:12px; padding:14px 0; border-bottom:1px solid var(--line); animation:fadeUp .5s var(--ease) both;}
+  .pay-item:nth-child(2){animation-delay:.05s} .pay-item:nth-child(3){animation-delay:.1s}
+  .pay-item:nth-child(4){animation-delay:.15s} .pay-item:nth-child(5){animation-delay:.2s}
+  .pay-item .n{font-family:var(--mono); font-size:.6875rem; color:var(--muted); padding-top:3px;}
+  .pay-item b{display:block; font-family:var(--serif); font-size:1.25rem; font-weight:400; letter-spacing:-.025em; line-height:1.15;}
+  .pay-item em{font-style:normal; font-size:.8125rem; color:var(--muted);}
+  .pay-options{display:flex; flex-direction:column; gap:8px; margin-bottom:8px;}
+  .pay-opt{
+    background:transparent; border:1px solid var(--line); border-radius:18px; padding:16px 18px;
+    display:flex; align-items:center; justify-content:space-between; gap:12px; cursor:pointer; text-align:left;
+    transition:border-color .3s var(--ease), background-color .3s var(--ease);
+  }
+  .pay-opt.selected{border-color:var(--ink); background:var(--surface);}
+  .po-body{display:flex; flex-direction:column; gap:2px;}
+  .po-body b{font-family:var(--serif); font-size:1.25rem; font-weight:400; letter-spacing:-.025em; line-height:1.1;}
+  .po-body em{font-style:normal; font-size:.75rem; color:var(--muted);}
+  .po-price{display:inline-flex; align-items:center; border:1px solid currentColor; border-radius:999px; padding:.3em .75em; font-size:1.125rem; letter-spacing:-.02em; font-variant-numeric:tabular-nums; white-space:nowrap; flex-shrink:0;}
+  .po-price i{font-style:normal; font-size:.6875rem; color:var(--muted); margin-left:2px;}
+  .pay-opt.selected .po-price{background:var(--ink); color:var(--cream); border-color:var(--ink);}
+  .pay-opt.selected .po-price i{color:var(--cream); opacity:.7;}
+  .pay-restore{width:100%; background:none; border:none; cursor:pointer; padding:14px; font-family:var(--mono); font-size:.625rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted);}
+  .pay-cold{background:var(--wash); border-left:2px solid var(--bordeaux); padding:12px 14px; margin-top:8px; font-size:.8125rem; line-height:1.55; color:var(--bordeaux);}
+
+  /* ── overview ─────────────────────────────────── */
+  .hero{background:var(--ink); color:var(--cream); border-radius:22px; padding:20px 20px 22px; margin-bottom:30px;}
+  .hero .folio{color:var(--cream); opacity:.6; margin-bottom:34px;}
+  .hero-title{font-size:4rem; margin-bottom:8px;}
+  .hero-meta{font-size:.8125rem; opacity:.65; margin-bottom:26px;}
+  .hero-bottom{display:grid; grid-template-columns:1fr 1fr; border-top:1px solid rgba(243,237,227,.2);}
+  .hero-stat{padding-top:14px; display:flex; flex-direction:column; gap:6px;}
+  .hero-stat + .hero-stat{border-left:1px solid rgba(243,237,227,.2); padding-left:16px;}
+  .hero-stat .caps{opacity:.6;}
+  .hero-stat b{font-family:var(--serif); font-size:2.5rem; font-weight:300; letter-spacing:-.04em; line-height:1; font-variant-numeric:tabular-nums;}
+  .hero-stat .up{color:var(--sage);}
+  .hero-stat .down{color:#F08A80;}
+
+  .saved{border:1px solid var(--line); border-radius:18px; padding:16px 18px; margin-bottom:26px; display:grid; grid-template-columns:auto 1fr; gap:4px 12px;}
+  .saved .dot{background:var(--sage); margin-top:7px; grid-row:span 2;}
+  .saved b{font-family:var(--serif); font-size:1.25rem; font-weight:400; letter-spacing:-.025em; line-height:1.15;}
+  .saved p{font-size:.8125rem; line-height:1.5; color:var(--muted);}
+
+  .rows{display:flex; flex-direction:column;}
+  .row{
+    display:grid; grid-template-columns:28px 1fr auto; gap:4px 12px; align-items:baseline;
+    padding:18px 0; border-bottom:1px solid var(--line); cursor:pointer;
+    animation:fadeUp .5s var(--ease) both; transition:padding .35s var(--ease), background-color .35s var(--ease);
+  }
+  @media (hover:hover){ .row:hover{padding-left:6px; padding-right:6px; background:var(--paper);} }
+  .row:active{background:var(--soft);}
+  .row-idx{font-family:var(--mono); font-size:.6875rem; color:var(--muted);}
+  .row-name{font-family:var(--serif); font-size:1.5rem; font-weight:400; letter-spacing:-.03em; line-height:1.1; display:flex; align-items:center; gap:10px;}
+  .row-count{font-family:var(--serif); font-size:2.25rem; font-weight:300; letter-spacing:-.04em; line-height:1; font-variant-numeric:tabular-nums;}
+  .row-preview{grid-column:2 / 4; font-family:var(--mono); font-size:.6875rem; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .row-go{grid-column:2 / 4; font-family:var(--mono); font-size:.625rem; letter-spacing:.12em; text-transform:uppercase; margin-top:6px;}
+  .row-go span{border-bottom:1px solid currentColor; padding-bottom:1px;}
+
+  /* ── detail ───────────────────────────────────── */
+  .detail-head{margin-bottom:18px;}
+  .detail-title{font-size:clamp(2.25rem,11vw,3rem); margin:0 0 10px;}
+  .detail-count{display:flex; align-items:center; gap:8px;}
+  .detail-desc{font-size:.875rem; line-height:1.55; color:var(--muted); margin-top:10px; max-width:38ch;}
+  .controls{
+    position:sticky; top:calc(64px + var(--sat)); z-index:14; background:var(--cream);
+    padding:10px 0 14px; display:grid; grid-template-columns:1fr auto; gap:8px; border-bottom:1px solid var(--line-strong);
+  }
+  .field{
+    width:100%; font-family:var(--sans); font-size:1rem; /* 16px : pas de zoom auto sur iOS */
+    padding:12px 18px; border:1px solid var(--line); border-radius:999px; background:var(--surface);
+    outline:none; color:var(--ink); appearance:none; -webkit-appearance:none;
+  }
+  .field:focus{border-color:var(--ink);}
+  select.field{cursor:pointer; font-size:.875rem; font-weight:500; padding-right:16px; width:auto; max-width:150px;}
+
+  .person{display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--line); animation:fadeUp .4s var(--ease) both;}
+  .person-av{width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-weight:500; font-size:.6875rem;}
+  .person-body{min-width:0;}
+  .person-handle{display:block; font-weight:500; font-size:.9375rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .person-date{display:block; font-family:var(--mono); font-size:.625rem; color:var(--muted); margin-top:2px;}
+  .person-go{
+    width:36px; height:36px; border-radius:50%; border:1px solid var(--line-strong); flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; text-decoration:none; color:var(--ink); font-size:.8125rem;
+    transition:background-color .3s var(--ease), color .3s var(--ease);
+  }
+  @media (hover:hover){ .person-go:hover{background:var(--ink); color:var(--cream);} }
+  .empty{text-align:center; padding:56px 22px; font-family:var(--serif); font-style:italic; font-weight:300; font-size:1.75rem; letter-spacing:-.03em; line-height:1.15; color:var(--muted);}
+
+  /* ── install hint ─────────────────────────────── */
+  .install{
+    position:fixed; left:50%; bottom:calc(14px + var(--sab)); transform:translate(-50%, 140%); z-index:50;
+    width:calc(100% - 28px); max-width:492px; background:var(--ink); color:var(--cream); border-radius:20px;
+    padding:14px 14px 14px 18px; display:flex; align-items:center; gap:12px;
+    transition:transform .5s var(--ease); box-shadow:0 18px 40px rgba(26,20,18,.25);
+  }
+  .install.show{transform:translate(-50%, 0);}
+  .install p{flex:1; font-size:.8125rem; line-height:1.45;}
+  .install p b{font-weight:600;}
+  .install .btn{width:auto; background:var(--cream); color:var(--ink); border-color:var(--cream);}
+  .install .x{background:none; border:none; color:var(--cream); opacity:.6; cursor:pointer; font-size:1rem; padding:6px;}
+</style>
+</head>
+<body>
+<div class="device">
+
+  <!-- ════ SPLASH ════ -->
+  <section class="splash" id="splash">
+    <div class="folio caps"><span>Le Mouchard</span><span>N°02</span><span>Instagram</span></div>
+
+    <div class="splash-mid">
+      <div class="caps splash-kicker rise" style="animation-delay:.05s"><span class="dot"></span> Zéro connexion · Zéro risque</div>
+      <h1 class="serif splash-title rise" style="animation-delay:.12s">Qui te suit <em>vraiment.</em></h1>
+      <p class="splash-lede rise" style="animation-delay:.2s">Découvre qui ne te suit pas en retour et qui a disparu. Garde tes exports dans le temps pour voir aussi qui t'a quitté.</p>
+
+      <div class="compare rise" style="animation-delay:.28s">
+        <div class="compare-row bad">
+          <span class="caps">Les autres</span>
+          <p>Demandent ton mot de passe et se connectent à ta place → compte signalé, <b>shadow ban</b>, voire suspension.</p>
+        </div>
+        <div class="compare-row good">
+          <span class="caps">Le Mouchard</span>
+          <p>Lit le fichier qu'Instagram <b>te donne officiellement</b>. Aucun login, aucune requête vers Instagram.</p>
+        </div>
+      </div>
+
+      <div class="strip rise" style="animation-delay:.36s">
+        <div class="strip-cell"><span class="n">01 <span class="pill">PRO</span></span><span class="t"><em>Partis</em></span></div>
+        <div class="strip-cell"><span class="n">02 <span class="pill">PRO</span></span><span class="t"><em>Arrivés</em></span></div>
+        <div class="strip-cell"><span class="n">03</span><span class="t">Sans retour</span></div>
+        <div class="strip-cell"><span class="n">04</span><span class="t">Fantômes</span></div>
+      </div>
+    </div>
+
+    <div class="rise" style="animation-delay:.44s">
+      <button class="btn" id="splash-cta">Balance le paquet <span class="arrow">→</span></button>
+      <div class="caps splash-foot">Aucun mot de passe · Tout reste sur ton téléphone</div>
+    </div>
+  </section>
+
+  <!-- ════ APP ════ -->
+  <div id="app" style="display:none;">
+    <header class="topbar">
+      <div class="brand">Le <em>Mouchard</em></div>
+      <button class="icon-btn" id="restart-btn" title="Recommencer">↺ Recommencer</button>
+    </header>
+
+    <!-- ── UPLOAD SCREEN ── -->
+    <main class="screen" id="screen-upload">
+      <div class="page-head">
+        <h1 class="serif page-title" id="page-title">Un <em>instantané.</em></h1>
+        <p class="page-sub" id="page-sub"></p>
+      </div>
+
+      <div class="segmented" role="tablist">
+        <button class="seg active" data-mode="one">Un seul export</button>
+        <button class="seg" data-mode="two">Deux exports<span class="pill lock" id="two-lock">PRO</span></button>
+      </div>
+
+      <div class="mode-info" id="mode-info"></div>
+
+      <button class="helper-link" id="open-tuto">
+        <span class="helper-body">
+          <span class="helper-title">Comment récupérer <em>mes fichiers&nbsp;?</em></span>
+          <span class="helper-sub">Le guide complet, étape par étape</span>
+        </span>
+        <span class="helper-go">→</span>
+      </button>
+
+      <div class="memory" id="memory-card" style="display:none;"></div>
+
+      <div id="old-block">
+        <div class="caps section-label"><span>01 — Ancien export</span><span>2 fichiers</span></div>
+        <div class="stack">
+          <label class="zone" id="z-of" for="i-of">
+            <span class="zone-ico"><span>+</span></span>
+            <span class="zone-body">
+              <span class="zone-name">Abonnés</span>
+              <span class="zone-hint" id="h-of">followers_1.json</span>
+            </span>
+            <span class="zone-cta">Choisir</span>
+            <input type="file" id="i-of" accept="application/json,.json" multiple>
+          </label>
+          <label class="zone" id="z-og" for="i-og">
+            <span class="zone-ico"><span>+</span></span>
+            <span class="zone-body">
+              <span class="zone-name">Abonnements</span>
+              <span class="zone-hint" id="h-og">following.json</span>
+            </span>
+            <span class="zone-cta">Choisir</span>
+            <input type="file" id="i-og" accept="application/json,.json" multiple>
+          </label>
+        </div>
+      </div>
+
+      <div class="caps section-label"><span id="label-recent">01 — Ton export</span><span>2 fichiers</span></div>
+      <div class="stack">
+        <label class="zone" id="z-nf" for="i-nf">
+          <span class="zone-ico"><span>+</span></span>
+          <span class="zone-body">
+            <span class="zone-name">Abonnés</span>
+            <span class="zone-hint" id="h-nf">followers_1.json</span>
+          </span>
+          <span class="zone-cta">Choisir</span>
+          <input type="file" id="i-nf" accept="application/json,.json" multiple>
+        </label>
+        <label class="zone" id="z-ng" for="i-ng">
+          <span class="zone-ico"><span>+</span></span>
+          <span class="zone-body">
+            <span class="zone-name">Abonnements</span>
+            <span class="zone-hint" id="h-ng">following.json</span>
+          </span>
+          <span class="zone-cta">Choisir</span>
+          <input type="file" id="i-ng" accept="application/json,.json" multiple>
+        </label>
+      </div>
+
+      <div class="note" id="note" role="alert"></div>
+
+      <div class="sticky-cta">
+        <button class="btn" id="go-btn" disabled>Analyser <span class="arrow">→</span></button>
+      </div>
+    </main>
+
+    <!-- ── TUTO SCREEN ── -->
+    <section class="screen" id="screen-tuto" style="display:none;">
+      <button class="back" id="tuto-back">← Retour</button>
+      <div class="page-head">
+        <h1 class="serif page-title">Récupérer <em>tes fichiers.</em></h1>
+        <p class="page-sub">Instagram te donne tes propres données. <b>11 étapes</b>, environ 2 minutes de manip.</p>
+      </div>
+
+      <div class="tuto-warn">
+        Une fois lancé, Instagram met de <b>quelques minutes à 48 h</b> à préparer le fichier. Tu reçois une notification quand c'est prêt.
+      </div>
+
+      <div class="steps">
+        <div class="step"><span class="step-num">01</span><div class="step-body">
+          <h3 class="step-title">Ouvre tes réglages</h3>
+          <p class="step-text">Sur ton profil Instagram, appuie sur le menu <b>☰</b> en haut à droite, puis <b>Paramètres et confidentialité</b>.</p>
+          <div class="mock"><div class="mock-row"><span class="mock-ico">☰</span><span class="mock-label">Paramètres et confidentialité</span><span class="mock-chev">›</span></div></div>
+        </div></div>
+
+        <div class="step"><span class="step-num">02</span><div class="step-body">
+          <h3 class="step-title">Espace Comptes</h3>
+          <p class="step-text">Descends jusqu'à la section <b>Votre compte</b> et ouvre <b>Espace Comptes</b>.</p>
+          <div class="mock">
+            <div class="mock-top"><span class="mock-section">Votre compte</span><span class="mock-meta">∞ Meta</span></div>
+            <div class="mock-row"><span class="mock-ico">◎</span><span class="mock-label">Espace Comptes<em>Mot de passe, sécurité, informations personnelles…</em></span><span class="mock-chev">›</span></div>
+          </div>
+        </div></div>
+
+        <div class="step"><span class="step-num">03</span><div class="step-body">
+          <h3 class="step-title">Vos informations et autorisations</h3>
+          <div class="mock"><div class="mock-row"><span class="mock-ico">🗄</span><span class="mock-label">Vos informations et autorisations</span><span class="mock-chev">›</span></div></div>
+        </div></div>
+
+        <div class="step"><span class="step-num">04</span><div class="step-body">
+          <h3 class="step-title">Exporter vos informations</h3>
+          <div class="mock"><div class="mock-row"><span class="mock-label">Exporter vos informations</span><span class="mock-chev">↗</span></div></div>
+          <p class="step-text">Puis sur l'écran suivant, appuie sur le bouton bleu <b>Créer une exportation</b>.</p>
+          <div class="mock"><div class="mock-btn">Créer une exportation</div></div>
+        </div></div>
+
+        <div class="step"><span class="step-num">05</span><div class="step-body">
+          <h3 class="step-title">Choisis ton profil</h3>
+          <p class="step-text">Sélectionne le compte Instagram concerné si tu en gères plusieurs.</p>
+        </div></div>
+
+        <div class="step"><span class="step-num">06</span><div class="step-body">
+          <h3 class="step-title">Exporter sur mon appareil</h3>
+          <p class="step-text">Choisis bien <b>« Exporter sur mon appareil »</b> — pas vers un service externe.</p>
+          <div class="mock">
+            <div class="mock-row hl"><span class="mock-label">Exporter sur mon appareil</span><span class="mock-chev">›</span></div>
+            <div class="mock-row dim"><span class="mock-label">Exporter vers un service externe</span><span class="mock-chev">›</span></div>
+          </div>
+        </div></div>
+
+        <div class="step key"><span class="step-num">07</span><div class="step-body">
+          <span class="caps key-tag">Important</span>
+          <h3 class="step-title">Coche « Followers et suivi(e)s »</h3>
+          <p class="step-text">Dans <b>Personnaliser les informations</b>, section <b>Contacts</b>. Coche uniquement celle-là : l'export sera bien plus rapide.</p>
+          <div class="mock">
+            <div class="mock-top"><span class="mock-section">Contacts</span><span class="mock-blue">Tout sélectionner</span></div>
+            <div class="mock-row"><span class="mock-label">Contacts</span><span class="mock-box"></span></div>
+            <div class="mock-row"><span class="mock-label">Followers et suivi(e)s</span><span class="mock-box on">✓</span></div>
+          </div>
+        </div></div>
+
+        <div class="step key"><span class="step-num">08</span><div class="step-body">
+          <span class="caps key-tag">Le plus important</span>
+          <h3 class="step-title">Période : « Depuis le début »</h3>
+          <p class="step-text">Si tu laisses une période plus courte, tu n'auras qu'une partie de tes abonnés et les résultats seront faux.</p>
+          <div class="mock"><div class="mock-row"><span class="mock-label">Depuis le début<em>L'exportation peut prendre plus de temps</em></span><span class="mock-radio on"></span></div></div>
+        </div></div>
+
+        <div class="step key"><span class="step-num">09</span><div class="step-body">
+          <span class="caps key-tag">Important</span>
+          <h3 class="step-title">Format : JSON</h3>
+          <p class="step-text">Surtout pas HTML — Le Mouchard ne lit que le <b>JSON</b>.</p>
+          <div class="mock">
+            <div class="mock-row dim"><span class="mock-label">HTML<em>Pour consulter tes données hors ligne</em></span><span class="mock-radio"></span></div>
+            <div class="mock-row"><span class="mock-label">JSON<em>Pour importer vers un autre site ou une app</em></span><span class="mock-radio on"></span></div>
+          </div>
+        </div></div>
+
+        <div class="step"><span class="step-num">10</span><div class="step-body">
+          <h3 class="step-title">Vérifie et lance</h3>
+          <p class="step-text">Ton récapitulatif doit afficher exactement ça avant de valider :</p>
+          <div class="mock">
+            <div class="mock-row"><span class="mock-label">Période<em>Depuis le début</em></span><span class="mock-ok">✓</span></div>
+            <div class="mock-row"><span class="mock-label">Format<em>JSON</em></span><span class="mock-ok">✓</span></div>
+            <div class="mock-btn">Commencer l'exportation</div>
+          </div>
+        </div></div>
+
+        <div class="step"><span class="step-num">11</span><div class="step-body">
+          <h3 class="step-title">Récupère le fichier</h3>
+          <p class="step-text">Quand Instagram t'envoie la notification, télécharge le <b>.zip</b> et décompresse-le (sur iPhone : touche le .zip dans l'app Fichiers). Tes deux fichiers sont dans :</p>
+          <div class="path">connections › followers_and_following ›<br><b>followers_1.json</b> + <b>following.json</b></div>
+          <p class="step-text">S'il y a plusieurs fichiers <b>followers_2.json</b>, <b>followers_3.json</b>… sélectionne-les tous ensemble dans la zone « Abonnés ».</p>
+        </div></div>
+      </div>
+
+      <div class="sticky-cta">
+        <button class="btn" id="tuto-done">J'ai mes fichiers <span class="arrow">→</span></button>
+      </div>
+    </section>
+
+    <!-- ── PAYWALL SCREEN ── -->
+    <section class="screen" id="screen-paywall" style="display:none;">
+      <button class="back" id="pay-back">← Retour</button>
+      <div class="page-head">
+        <span class="caps muted" style="display:block; margin-bottom:14px;">Le Mouchard · Pro</span>
+        <h1 class="serif page-title">Passe en <em>illimité.</em></h1>
+        <p class="page-sub">Le suivi dans le temps, c'est là que ça devient vraiment intéressant.</p>
+      </div>
+
+      <div class="pay-list">
+        <div class="pay-item"><span class="n">01</span><span><b>Qui t'a unfollow</b><em>La comparaison entre deux exports</em></span></div>
+        <div class="pay-item"><span class="n">02</span><span><b>Historique illimité</b><em>Tous tes exports gardés, pas juste le dernier</em></span></div>
+        <div class="pay-item"><span class="n">03</span><span><b>Courbe d'évolution</b><em>Ta croissance mois par mois</em></span></div>
+        <div class="pay-item"><span class="n">04</span><span><b>Rappels automatiques</b><em>« Ça fait 30 jours, refais un export »</em></span></div>
+      </div>
+
+      <div class="pay-options">
+        <button class="pay-opt selected" data-plan="lifetime">
+          <span class="po-body"><b>Achat unique</b><em>Payé une fois, à vie</em></span>
+          <span class="po-price">4,99 €</span>
+        </button>
+        <button class="pay-opt" data-plan="yearly">
+          <span class="po-body"><b>Annuel</b><em>Avec les mises à jour</em></span>
+          <span class="po-price">2,99 €<i>/an</i></span>
+        </button>
+      </div>
+
+      <div class="pay-cold" id="pay-cold" style="display:none;">
+        Tu n'as encore qu'un seul export enregistré — la comparaison ne sera possible qu'après un <b>deuxième export</b>, dans quelques semaines.
+      </div>
+
+      <div class="sticky-cta">
+        <button class="btn" id="pay-buy">Débloquer <span class="arrow">→</span></button>
+        <button class="pay-restore" id="pay-restore">Restaurer mes achats</button>
+      </div>
+    </section>
+
+    <!-- ── OVERVIEW SCREEN ── -->
+    <section class="screen" id="screen-overview" style="display:none;">
+      <div class="hero">
+        <div class="folio caps"><span>Rapport</span><span>·</span><span id="hero-date">—</span></div>
+        <h2 class="serif hero-title"><em>Bilan.</em></h2>
+        <div class="hero-meta" id="hero-meta">—</div>
+        <div class="hero-bottom">
+          <div class="hero-stat"><span class="caps" id="g-followers-label">Abonnés</span><b id="g-followers">0</b></div>
+          <div class="hero-stat"><span class="caps" id="g-following-label">Suivis</span><b id="g-following">0</b></div>
+        </div>
+      </div>
+
+      <div class="caps section-label"><span>Le détail</span><span id="rows-count"></span></div>
+      <div class="rows" id="rows"></div>
+
+      <button class="helper-link" id="go-premium" style="margin-top:28px;">
+        <span class="helper-body">
+          <span class="helper-title">Passer en <em>illimité</em></span>
+          <span class="helper-sub">Qui t'a unfollow · historique complet</span>
+        </span>
+        <span class="helper-go">→</span>
+      </button>
+    </section>
+
+    <!-- ── DETAIL SCREEN ── -->
+    <section class="screen" id="screen-detail" style="display:none;">
+      <button class="back" id="back-btn">← Retour</button>
+      <div class="detail-head">
+        <h2 class="serif detail-title" id="d-title"></h2>
+        <div class="caps detail-count"><span class="dot" id="d-dot"></span><span id="d-count"></span></div>
+        <p class="detail-desc" id="d-desc"></p>
+      </div>
+      <div class="controls">
+        <input class="field" id="q" type="search" placeholder="Chercher un pseudo…" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <select class="field" id="sort" aria-label="Trier">
+          <option value="default">Par défaut</option>
+          <option value="az">A → Z</option>
+          <option value="za">Z → A</option>
+          <option value="recent">Plus récents</option>
+          <option value="oldest">Plus anciens</option>
+        </select>
+      </div>
+      <div class="rows" id="people"></div>
+      <div class="empty" id="empty" style="display:none;"></div>
+    </section>
+  </div>
+</div>
+
+<div class="install" id="install" aria-live="polite">
+  <p id="install-txt"></p>
+  <button class="btn btn--s" id="install-btn" style="display:none;">Installer</button>
+  <button class="x" id="install-x" aria-label="Fermer">✕</button>
+</div>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  const CATS = {
+    lost:         { label:'Ont arrêté de te suivre', desc:"Ils te suivaient à l'ancien export, plus maintenant.", dot:'var(--accent)',  av:'#F6DAD6', avInk:'var(--bordeaux)' },
+    gained:       { label:"T'ont suivi depuis",      desc:"Nouveaux followers apparus depuis l'ancien export.", dot:'var(--sage)',    av:'var(--sage)', avInk:'var(--sage-ink)' },
+    notFollowBack:{ label:'Ne suit pas en retour',   desc:"Tu les suis, ils ne te suivent pas. Triés du plus ancien suivi au plus récent.", dot:'var(--bordeaux)', av:'var(--soft)', avInk:'var(--bordeaux)' },
+    unfollowed:   { label:'Tu as quitté',            desc:"Des comptes que tu suivais et que tu ne suis plus.", dot:'var(--muted)',   av:'var(--paper)', avInk:'var(--muted)' },
+    followed:     { label:'Tu suis depuis',          desc:"Des comptes que tu as commencé à suivre récemment.", dot:'var(--ink)',     av:'var(--soft)', avInk:'var(--ink)' },
+    ghosts:       { label:'Comptes fantômes',        desc:"Des comptes que tu suis mais qui ont été désactivés ou supprimés — inutile de les garder.", dot:'transparent; box-shadow:inset 0 0 0 1.5px var(--muted)', av:'var(--ink)', avInk:'var(--cream)' }
+  };
+  const EMPTY = {
+    lost:"Personne ne t'a lâché. Propre.",
+    gained:"Aucun nouveau venu sur la période.",
+    notFollowBack:"Tout le monde te suit en retour. Rare.",
+    unfollowed:"Tu n'as quitté personne.",
+    followed:"Tu n'as suivi personne de nouveau.",
+    ghosts:"Aucun compte fantôme. Ton feed est clean."
+  };
+
+  const sets = { of:null, og:null, nf:null, ng:null };
+  const diffs = {};
+  let tab = 'lost';
+  let mode = 'one'; // 'one' = snapshot actuel seulement, 'two' = comparaison
+  let snapshot = null;
+  let history = [];      // [{date, followers:[[u,{href,ts}]], following:[...]}]
+  let isPremium = false;
+
+  const SOLO_CATS = ['notFollowBack','ghosts'];
+  const DUO_CATS = ['lost','gained','notFollowBack','unfollowed','followed','ghosts'];
+
+  function renderModeInfo(){
+    const two = mode === 'two';
+    $('mode-info').innerHTML = two ? `
+      <div class="mi-head caps"><span>Ce que tu obtiens</span><span class="muted">4 fichiers</span></div>
+      <div class="mi-list">
+        <div class="mi-item yes"><span class="b">01</span><span><b>Qui t'a unfollow</b> entre les deux dates</span></div>
+        <div class="mi-item yes"><span class="b">02</span><span><b>Qui t'a suivi</b> depuis l'ancien export</span></div>
+        <div class="mi-item yes"><span class="b">03</span><span>Qui <b>tu as quitté</b> / <b>tu suis depuis</b></span></div>
+        <div class="mi-item yes"><span class="b">04</span><span>Qui <b>ne te suit pas en retour</b></span></div>
+        <div class="mi-item yes"><span class="b">05</span><span>Les <b>comptes fantômes</b> (supprimés)</span></div>
+        <div class="mi-item yes"><span class="b">06</span><span>Ton <b>évolution nette</b> +/- sur la période</span></div>
+      </div>
+      <p class="mi-note">Il te faut un ancien export ET un récent. Si tu as déjà utilisé l'app, l'ancien est mémorisé automatiquement.</p>
+    ` : `
+      <div class="mi-head caps"><span>Ce que tu obtiens</span><span class="muted">2 fichiers</span></div>
+      <div class="mi-list">
+        <div class="mi-item yes"><span class="b">01</span><span>Qui <b>ne te suit pas en retour</b>, trié du plus ancien</span></div>
+        <div class="mi-item yes"><span class="b">02</span><span>Les <b>comptes fantômes</b> (désactivés ou supprimés)</span></div>
+        <div class="mi-item yes"><span class="b">03</span><span>Tes <b>totaux</b> abonnés / abonnements</span></div>
+        <div class="mi-item no"><span class="b">✕</span><span>Qui t'a unfollow — impossible sans un « avant » à comparer</span></div>
+      </div>
+      <p class="mi-note">Ton export est mémorisé sur ce téléphone. Refais-en un dans quelques semaines et passe en « Deux exports » pour voir les départs.</p>
+    `;
+  }
+
+  function setMode(m){
+    mode = m;
+    document.querySelectorAll('.seg').forEach(b=> b.classList.toggle('active', b.dataset.mode===m));
+    const two = m === 'two';
+    $('page-title').innerHTML = two ? 'Deux <em>instantanés.</em>' : 'Un <em>instantané.</em>';
+    $('page-sub').innerHTML = two
+      ? 'Un <b>ancien</b> export, un <b>récent</b> — et on te dit tout ce qui a bougé entre les deux.'
+      : "Ton export <b>actuel</b> suffit pour voir qui ne te suit pas en retour et qui s'est volatilisé.";
+    $('label-recent').textContent = two ? '02 — Export récent' : '01 — Ton export';
+    $('go-btn').innerHTML = two ? 'Comparer <span class="arrow">→</span>' : 'Analyser <span class="arrow">→</span>';
+    $('old-block').style.display = (two && !(snapshot && sets.of)) ? 'block' : 'none';
+    $('memory-card').style.display = (two && snapshot) ? 'block' : 'none';
+    renderModeInfo();
+    sync();
+  }
+  document.querySelectorAll('.seg').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      if(b.dataset.mode === 'two' && !isPremium){ openPaywall(); return; }
+      if(b.dataset.mode === mode) return;
+      const scr = $('screen-upload');
+      scr.style.transition = 'opacity .16s ease';
+      scr.style.opacity = '.35';
+      setTimeout(()=>{ setMode(b.dataset.mode); scr.style.opacity = '1'; }, 150);
+    });
+  });
+
+  // Re-triggers a CSS animation by forcing a reflow between class removals.
+  function animate(el, cls){
+    el.classList.remove('screen-anim','screen-anim-back');
+    void el.offsetWidth;
+    el.classList.add(cls);
+  }
+  function showScreen(el, back){
+    el.style.display = 'block';
+    animate(el, back ? 'screen-anim-back' : 'screen-anim');
+    window.scrollTo(0, 0);
+  }
+  const note = $('note');
+  const showNote = m => { note.textContent = m; note.style.display='block'; };
+  const clearNote = () => { note.style.display='none'; };
+
+  /* ── parsing ── */
+  function extract(json){
+    const found = new Map();
+    const ok = s => typeof s === 'string' && s.length && /^[a-zA-Z0-9._]+$/.test(s);
+    (function walk(n){
+      if(Array.isArray(n)) return n.forEach(walk);
+      if(n && typeof n === 'object'){
+        if(ok(n.title) && Array.isArray(n.string_list_data)){
+          const e = n.string_list_data[0];
+          found.set(n.title, { href:(e&&e.href)||'https://instagram.com/'+n.title, ts:e&&e.timestamp });
+        }
+        if(ok(n.value)) found.set(n.value, { href:n.href||'https://instagram.com/'+n.value, ts:n.timestamp });
+        if(ok(n.username) && !n.value) found.set(n.username, { href:n.href||'https://instagram.com/'+n.username, ts:n.timestamp });
+        Object.values(n).forEach(walk);
+      }
+    })(json);
+    return found;
+  }
+  const readOne = f => new Promise((res,rej)=>{
+    const r = new FileReader();
+    r.onload = ()=>{ try{ const m = extract(JSON.parse(r.result)); res(m.size?m:null); }catch(e){ rej('parse'); } };
+    r.onerror = ()=>rej('read');
+    r.readAsText(f);
+  });
+  const readAll = files => Promise.all(files.map(readOne)).then(ms=>{
+    const merged = new Map();
+    ms.forEach(m=>{ if(m) m.forEach((v,k)=>merged.set(k,v)); });
+    if(!merged.size) return Promise.reject('empty');
+    return merged;
+  });
+
+  /* ── zones ── */
+  function zone(zid, iid, hid, key){
+    const z = $(zid), i = $(iid), h = $(hid);
+    const base = h.textContent;
+    const cta = z.querySelector('.zone-cta');
+    z.addEventListener('dragover', e=>{ e.preventDefault(); z.classList.add('dragover'); });
+    z.addEventListener('dragleave', ()=> z.classList.remove('dragover'));
+    z.addEventListener('drop', e=>{ e.preventDefault(); z.classList.remove('dragover'); if(e.dataTransfer.files.length) take([...e.dataTransfer.files]); });
+    i.addEventListener('change', e=>{ if(e.target.files.length) take([...e.target.files]); i.value = ''; });
+    function take(files){
+      clearNote();
+      readAll(files).then(m=>{
+        z.classList.add('filled');
+        h.textContent = m.size + ' comptes lus';
+        cta.textContent = 'Changer';
+        sets[key] = m; sync();
+      }).catch(err=>{
+        z.classList.remove('filled'); h.textContent = base; cta.textContent = 'Choisir'; sets[key] = null; sync();
+        showNote(err==='parse' ? "Ce fichier n'est pas un export JSON Instagram valide."
+               : err==='empty' ? "Aucun pseudo trouvé dans ce fichier."
+               : "Impossible de lire ce fichier.");
+      });
+    }
+  }
+  zone('z-of','i-of','h-of','of');
+  zone('z-og','i-og','h-og','og');
+  zone('z-nf','i-nf','h-nf','nf');
+  zone('z-ng','i-ng','h-ng','ng');
+  function sync(){
+    const ready = mode === 'two'
+      ? !!(sets.of && sets.og && sets.nf && sets.ng)
+      : !!(sets.nf && sets.ng);
+    $('go-btn').disabled = !ready;
+  }
+
+  /* ── storage layer ── localStorage, tout reste sur l'appareil. */
+  const Store = {
+    async get(key){ try{ return localStorage.getItem(key); }catch(e){ return null; } },
+    async set(key, value){ try{ localStorage.setItem(key, value); }catch(e){ console.warn('storage set failed', e); } }
+  };
+  // Demande au navigateur de ne pas purger les données de l'app installée.
+  if(navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(()=>{});
+
+  const K = { history:'mouchard-history', premium:'mouchard-premium' };
+  const today = () => new Date().toISOString().slice(0,10);
+  const human = iso => new Date(iso).toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'});
+
+  async function loadHistory(){
+    const raw = await Store.get(K.history);
+    try{ history = raw ? JSON.parse(raw) : []; }catch(e){ history = []; }
+    isPremium = (await Store.get(K.premium)) === '1';
+  }
+  async function pushSnapshot(f, g){
+    const entry = { date:today(), followers:[...f], following:[...g] };
+    // Same-day re-run replaces rather than duplicates the entry.
+    history = history.filter(h => h.date !== entry.date);
+    history.push(entry);
+    history.sort((a,b)=> a.date.localeCompare(b.date));
+    // Free tier keeps only the latest snapshot; premium keeps the full timeline.
+    if(!isPremium && history.length > 1) history = history.slice(-1);
+    if(history.length > 24) history = history.slice(-24);
+    await Store.set(K.history, JSON.stringify(history));
+  }
+  function latestSnapshot(){
+    if(!history.length) return null;
+    const h = history[history.length-1];
+    return { date:h.date, followers:new Map(h.followers), following:new Map(h.following) };
+  }
+  async function setPremium(v){
+    isPremium = v;
+    await Store.set(K.premium, v ? '1' : '0');
+  }
+  async function initMemory(){
+    await loadHistory();
+    snapshot = latestSnapshot();
+    if(snapshot){
+      const s = snapshot;
+      const card = $('memory-card');
+      card.innerHTML = `
+        <div class="memory-head">
+          <span class="caps muted">Export mémorisé</span>
+          <span class="memory-date">${human(s.date)}</span>
+        </div>
+        <div class="chips">
+          <span class="chip"><b>${s.followers.size}</b> abonnés</span>
+          <span class="chip"><b>${s.following.size}</b> suivis</span>
+          ${history.length>1 ? `<span class="chip"><b>${history.length}</b> exports gardés</span>` : ''}
+        </div>
+        <div class="memory-actions">
+          <button class="btn btn--s" id="use-mem">Utiliser comme ancien</button>
+          <button class="btn btn--s btn--ghost" id="skip-mem">Autres fichiers</button>
+        </div>`;
+      $('use-mem').addEventListener('click', ()=>{
+        sets.of = s.followers; sets.og = s.following;
+        $('use-mem').textContent = '✓ Utilisé';
+        $('old-block').style.display = 'none';
+        sync();
+      });
+      $('skip-mem').addEventListener('click', ()=>{
+        $('old-block').style.display = 'block';
+        sets.of = null; sets.og = null; sync();
+      });
+    }
+    setMode('one');
+    applyPremiumUI();
+  }
+
+  /* ── diff ── */
+  const low = s => s.trim().toLowerCase();
+  function only(from,to){
+    const seen = new Set(); to.forEach((v,k)=>seen.add(low(k)));
+    const out = [];
+    from.forEach((v,k)=>{ if(!seen.has(low(k))) out.push({u:k, href:v.href, ts:v.ts}); });
+    return out.sort((a,b)=>a.u.localeCompare(b.u));
+  }
+  function ghosts(g){
+    const out = [];
+    g.forEach((v,k)=>{ if(/^__deleted__/i.test(k)) out.push({u:k, href:v.href, ts:v.ts}); });
+    return out.sort((a,b)=>(a.ts||0)-(b.ts||0));
+  }
+  const signed = n => `<span class="${n>=0?'up':'down'}">${n>=0?'+':'−'}${Math.abs(n)}</span>`;
+
+  $('go-btn').addEventListener('click', ()=>{
+    diffs.notFollowBack = only(sets.ng, sets.nf).filter(x=>!/^__deleted__/i.test(x.u)).sort((a,b)=>(a.ts||0)-(b.ts||0));
+    diffs.ghosts = ghosts(sets.ng);
+
+    if(mode === 'two'){
+      diffs.lost = only(sets.of, sets.nf);
+      diffs.gained = only(sets.nf, sets.of);
+      diffs.unfollowed = only(sets.og, sets.ng);
+      diffs.followed = only(sets.ng, sets.og);
+      $('g-followers').innerHTML = signed(sets.nf.size - sets.of.size);
+      $('g-following').innerHTML = signed(sets.ng.size - sets.og.size);
+    } else {
+      $('g-followers').textContent = sets.nf.size;
+      $('g-following').textContent = sets.ng.size;
+    }
+    $('hero-date').textContent = human(today());
+    $('hero-meta').textContent = mode === 'two' ? 'Évolution entre les deux exports' : 'Photo instantanée de ton compte';
+
+    renderRows();
+    $('screen-upload').style.display = 'none';
+    $('screen-detail').style.display = 'none';
+    showScreen($('screen-overview'), false);
+    pushSnapshot(sets.nf, sets.ng);
+  });
+
+  function renderRows(){
+    const keys = mode === 'two' ? DUO_CATS : SOLO_CATS;
+    const wrap = $('rows'); wrap.innerHTML = '';
+    $('rows-count').textContent = keys.length + ' listes';
+    document.querySelectorAll('#screen-overview .saved').forEach(n=>n.remove());
+
+    if(mode === 'one'){
+      const hint = document.createElement('div');
+      hint.className = 'saved';
+      hint.innerHTML = `<span class="dot"></span><b>Cet export est sauvegardé.</b>
+        <p>Refais-en un dans quelques semaines, puis passe en « Deux exports » pour voir précisément qui t'a quitté depuis aujourd'hui.</p>`;
+      wrap.previousElementSibling.before(hint);
+    }
+
+    keys.forEach((k,i)=>{
+      const c = CATS[k], list = diffs[k] || [];
+      const preview = list.length
+        ? list.slice(0,3).map(x=>'@'+esc(x.u)).join('  ·  ') + (list.length>3 ? '  +'+(list.length-3) : '')
+        : 'Rien à signaler';
+      const el = document.createElement('div');
+      el.className = 'row'; el.style.animationDelay = (i*60)+'ms';
+      el.setAttribute('role','button'); el.tabIndex = 0;
+      el.innerHTML = `
+        <span class="row-idx">${String(i+1).padStart(2,'0')}</span>
+        <span class="row-name"><span class="dot" style="background:${c.dot}"></span>${c.label}</span>
+        <span class="row-count">${list.length}</span>
+        <span class="row-preview">${preview}</span>
+        <span class="row-go"><span>${list.length ? 'Voir la liste' : 'Ouvrir'}</span> ↗</span>`;
+      el.addEventListener('click', ()=> openDetail(k));
+      el.addEventListener('keydown', e=>{ if(e.key==='Enter') openDetail(k); });
+      wrap.appendChild(el);
+    });
+  }
+
+  function openDetail(k){
+    tab = k;
+    $('d-title').textContent = CATS[k].label;
+    $('d-dot').style.cssText = 'background:' + CATS[k].dot;
+    const n = (diffs[k]||[]).length;
+    $('d-count').textContent = n + (n>1 ? ' comptes' : ' compte');
+    $('d-desc').textContent = CATS[k].desc;
+    $('q').value = ''; $('sort').value = 'default';
+    $('screen-overview').style.display = 'none';
+    showScreen($('screen-detail'), false);
+    renderPeople();
+  }
+  $('back-btn').addEventListener('click', ()=>{
+    $('screen-detail').style.display = 'none';
+    showScreen($('screen-overview'), true);
+  });
+
+  function renderPeople(){
+    const q = $('q').value.trim().toLowerCase();
+    const order = $('sort').value;
+    let list = (diffs[tab]||[]).filter(x=>!q || x.u.toLowerCase().includes(q));
+    list = [...list];
+    if(order==='az') list.sort((a,b)=>a.u.localeCompare(b.u));
+    else if(order==='za') list.sort((a,b)=>b.u.localeCompare(a.u));
+    else if(order==='recent') list.sort((a,b)=>(b.ts||0)-(a.ts||0));
+    else if(order==='oldest') list.sort((a,b)=>(a.ts||0)-(b.ts||0));
+
+    const wrap = $('people'), emp = $('empty');
+    wrap.innerHTML = '';
+    if(!list.length){
+      emp.textContent = q ? 'Aucun résultat pour cette recherche.' : EMPTY[tab];
+      emp.style.display = 'block'; wrap.style.display = 'none'; return;
+    }
+    emp.style.display = 'none'; wrap.style.display = 'flex';
+    const c = CATS[tab];
+    const frag = document.createDocumentFragment();
+    list.forEach((p,i)=>{
+      const el = document.createElement('div');
+      el.className = 'person'; el.style.animationDelay = Math.min(i*12,400)+'ms';
+      const href = /^https:\/\/(www\.)?instagram\.com\//.test(p.href) ? p.href : 'https://instagram.com/'+encodeURIComponent(p.u);
+      el.innerHTML = `
+        <span class="person-av" style="background:${c.av}; color:${c.avInk}">${esc(p.u.replace(/^_+/,'').slice(0,2).toUpperCase())}</span>
+        <span class="person-body">
+          <span class="person-handle">@${esc(p.u)}</span>
+          ${p.ts ? `<span class="person-date">${human(new Date(p.ts*1000).toISOString())}</span>` : ''}
+        </span>
+        <a class="person-go" href="${esc(href)}" target="_blank" rel="noopener" aria-label="Ouvrir le profil">↗</a>`;
+      frag.appendChild(el);
+    });
+    wrap.appendChild(frag);
+  }
+  $('q').addEventListener('input', renderPeople);
+  $('sort').addEventListener('change', renderPeople);
+
+  /* ── paywall ────────────────────────────────────
+     Pas de paiement réel dans la version web : « Débloquer »
+     active le mode Pro localement. Brancher Stripe / RevenueCat ici. */
+  function openPaywall(){
+    const from = $('screen-upload').style.display !== 'none' ? 'upload' : 'overview';
+    $('screen-paywall').dataset.from = from;
+    $('screen-upload').style.display = 'none';
+    $('screen-overview').style.display = 'none';
+    $('pay-cold').style.display = history.length < 2 ? 'block' : 'none';
+    showScreen($('screen-paywall'), false);
+  }
+  function closePaywall(){
+    const from = $('screen-paywall').dataset.from || 'upload';
+    $('screen-paywall').style.display = 'none';
+    showScreen($(from === 'overview' ? 'screen-overview' : 'screen-upload'), true);
+  }
+  $('pay-back').addEventListener('click', closePaywall);
+  $('go-premium').addEventListener('click', openPaywall);
+
+  document.querySelectorAll('.pay-opt').forEach(o=>{
+    o.addEventListener('click', ()=>{
+      document.querySelectorAll('.pay-opt').forEach(x=> x.classList.toggle('selected', x===o));
+    });
+  });
+
+  async function unlock(){
+    await setPremium(true);
+    applyPremiumUI();
+    closePaywall();
+  }
+  $('pay-buy').addEventListener('click', unlock);
+  $('pay-restore').addEventListener('click', unlock);
+
+  function applyPremiumUI(){
+    $('two-lock').style.display = isPremium ? 'none' : 'inline-flex';
+    $('go-premium').style.display = isPremium ? 'none' : 'flex';
+  }
+
+  /* ── tuto nav ── */
+  $('open-tuto').addEventListener('click', ()=>{
+    $('screen-upload').style.display = 'none';
+    showScreen($('screen-tuto'), false);
+    document.querySelectorAll('#screen-tuto .step').forEach((s,i)=>{
+      s.style.animationDelay = Math.min(i*45, 500) + 'ms';
+    });
+  });
+  function closeTuto(){
+    $('screen-tuto').style.display = 'none';
+    showScreen($('screen-upload'), true);
+  }
+  $('tuto-back').addEventListener('click', closeTuto);
+  $('tuto-done').addEventListener('click', closeTuto);
+
+  /* ── nav ── */
+  function enter(instant){
+    try{ sessionStorage.setItem('mouchard-in','1'); }catch(e){}
+    const sp = $('splash');
+    if(instant){
+      sp.style.display = 'none';
+      $('app').style.display = 'block';
+      return;
+    }
+    sp.style.transition = 'opacity .3s ease, transform .3s ease';
+    sp.style.opacity = '0';
+    sp.style.transform = 'translateY(-8px)';
+    setTimeout(()=>{
+      sp.style.display = 'none';
+      $('app').style.display = 'block';
+      showScreen($('screen-upload'), false);
+    }, 280);
+  }
+  $('splash-cta').addEventListener('click', ()=> enter(false));
+  $('restart-btn').addEventListener('click', ()=>{ try{ sessionStorage.removeItem('mouchard-in'); }catch(e){} location.reload(); });
+  try{ if(sessionStorage.getItem('mouchard-in')==='1') enter(true); }catch(e){}
+
+  initMemory();
+
+  /* ── PWA : hors ligne + invitation à installer ── */
+  if('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', ()=> navigator.serviceWorker.register('sw.js').catch(()=>{}));
+  }
+  const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  const dismissed = (()=>{ try{ return localStorage.getItem('mouchard-install-x')==='1'; }catch(e){ return false; } })();
+  const bar = $('install'), btn = $('install-btn');
+  const showBar = html => { $('install-txt').innerHTML = html; setTimeout(()=> bar.classList.add('show'), 1200); };
+  $('install-x').addEventListener('click', ()=>{ bar.classList.remove('show'); try{ localStorage.setItem('mouchard-install-x','1'); }catch(e){} });
+  if(!standalone && !dismissed){
+    const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    if(ios) showBar('Installe l\'app : touche <b>Partager</b> puis <b>Sur l\'écran d\'accueil</b>.');
+    let deferred = null;
+    window.addEventListener('beforeinstallprompt', e=>{
+      e.preventDefault(); deferred = e;
+      btn.style.display = 'flex';
+      showBar('<b>Le Mouchard</b> sur ton écran d\'accueil, comme une vraie app.');
+    });
+    btn.addEventListener('click', async ()=>{
+      if(!deferred) return;
+      deferred.prompt(); await deferred.userChoice; deferred = null;
+      bar.classList.remove('show');
+    });
+  }
+})();
+</script>
+</body>
+</html>

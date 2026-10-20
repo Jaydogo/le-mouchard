@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#1A1412"/>
+  <circle cx="256" cy="256" r="168" fill="none" stroke="#F3EDE3" stroke-opacity=".22" stroke-width="3"/>
+  <text x="256" y="338" text-anchor="middle" font-family="Newsreader, Georgia, serif" font-style="italic" font-weight="300" font-size="250" fill="#F3EDE3">M</text>
+  <circle cx="378" cy="150" r="14" fill="#C10707"/>
+</svg>
