@@ -91,6 +91,7 @@
   .btn--s{min-height:42px; padding:0 18px; font-size:.875rem; justify-content:center;}
 
   .delta{
+    white-space:nowrap; flex-shrink:0;
     display:inline-flex; align-items:center; gap:2px; border-radius:999px; padding:3px 9px;
     font-family:var(--mono); font-size:.6875rem; font-weight:500; letter-spacing:.02em; font-variant-numeric:tabular-nums;
   }
@@ -118,7 +119,7 @@
     transition:background-color .4s var(--spring), box-shadow .4s var(--spring);
     -webkit-user-select:none; user-select:none;
   }
-  .topbar.scrolled{background:rgba(248,244,237,.72); box-shadow:0 1px 0 var(--line);}
+  .topbar.scrolled{background:rgba(246,241,233,.88); box-shadow:0 1px 0 var(--line);}
   .tb-left{display:flex; align-items:center; min-width:0; position:relative; height:44px;}
   .tb-right{display:flex; justify-content:flex-end;}
   .brand{
@@ -239,13 +240,14 @@
   .hero-bottom{display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:16px;}
   .hero-stat{border-radius:18px; padding:12px 14px; background:rgba(243,237,227,.08); border:1px solid rgba(243,237,227,.1); display:flex; flex-direction:column; gap:6px;}
   .hero-stat .caps{opacity:.6;}
-  .hero-stat b{font-family:var(--serif); font-size:2rem; font-weight:300; letter-spacing:-.04em; line-height:1; font-variant-numeric:tabular-nums; display:flex; align-items:center; gap:8px;}
+  .hero-stat{min-width:0;}
+  .hero-stat b{flex-wrap:wrap; row-gap:4px; font-family:var(--serif); font-size:2rem; font-weight:300; letter-spacing:-.04em; line-height:1; font-variant-numeric:tabular-nums; display:flex; align-items:center; gap:8px;}
   .hero-stat b .delta{font-family:var(--mono);}
 
-  .tiles{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
+  .tiles{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:8px;}
   .tile{
     position:relative; text-align:left; border:none; cursor:pointer; border-radius:24px; padding:16px;
-    min-height:156px; display:flex; flex-direction:column; justify-content:space-between; gap:12px;
+    min-height:156px; min-width:0; overflow:hidden; display:flex; flex-direction:column; justify-content:space-between; gap:12px;
     font-family:inherit; color:var(--ink);
     transition:transform .4s var(--spring), box-shadow .4s var(--spring);
     animation:fadeUp .6s var(--spring) both;
@@ -253,7 +255,7 @@
   .tile:active{transform:scale(.96);}
   @media (hover:hover){ .tile:hover{box-shadow:0 12px 28px rgba(26,20,18,.1);} }
   .tile-top{font-family:var(--mono); font-size:.6875rem; letter-spacing:.12em; text-transform:uppercase;}
-  .tile-num{display:block; font-family:var(--serif); font-size:4.5rem; font-weight:300; letter-spacing:-.05em; line-height:.8; font-variant-numeric:tabular-nums;}
+  .tile-num{display:block; white-space:nowrap; font-family:var(--serif); font-size:var(--tn, 4.5rem); font-weight:300; letter-spacing:-.05em; line-height:.8; font-variant-numeric:tabular-nums;}
   .tile-sub{display:block; margin-top:8px; font-family:var(--mono); font-size:.625rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
   .tile.t-lost{background:var(--rose); color:var(--bordeaux);}
   .tile.t-gained{background:var(--lime);}
@@ -797,7 +799,10 @@
       : k === 'notFollowBack' ? 'trié du plus ancien'
       : k === 'ghosts' ? (n > 1 ? 'comptes supprimés' : 'compte supprimé')
       : (n ? list.slice(0,2).map(x=>'@'+esc(x.u)).join(' · ') + (n>2?' +'+(n-2):'') : 'rien à signaler');
-    return `<button class="tile t-${k} ${na?'na':''}" data-k="${k}" ${na?'disabled':''} style="animation-delay:${80+i*50}ms">
+    // Taille du chiffre selon le nombre de chiffres, pour que la tuile ne déborde jamais.
+    const digits = String(n).length;
+    const tn = digits <= 2 ? '4.5rem' : digits === 3 ? '3.6rem' : '2.8rem';
+    return `<button class="tile t-${k} ${na?'na':''}" data-k="${k}" ${na?'disabled':''} style="animation-delay:${80+i*50}ms; --tn:${tn}">
       <span class="tile-top">${c.short}</span>
       <span><b class="tile-num" data-count="${na?'':n}">${na?'—':'0'}</b><span class="tile-sub">${sub}</span></span>
     </button>`;
