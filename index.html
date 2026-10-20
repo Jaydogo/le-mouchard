@@ -471,6 +471,15 @@
   .hub-stat{display:block; margin-top:6px; font-family:var(--mono); font-size:.625rem; letter-spacing:.04em; opacity:.75;}
   .hub-sub{display:block; margin-top:4px; font-size:.75rem; color:var(--muted);}
 
+  .checklist{margin-bottom:12px;}
+  .checklist ul{list-style:none; margin:14px 0 0; padding:0; display:flex; flex-direction:column; gap:10px;}
+  .checklist li{display:grid; grid-template-columns:22px 1fr; gap:10px; font-size:.875rem; line-height:1.5; color:var(--muted);}
+  .checklist li b{color:var(--ink); font-weight:600;}
+  .ck{width:20px; height:20px; border-radius:6px; border:1.5px solid var(--line-strong); display:flex; align-items:center; justify-content:center; font-size:.75rem; margin-top:1px;}
+  .ck.on{background:var(--ink); border-color:var(--ink); color:var(--lime);}
+  .ck.dot{border:none;}
+  .ck.dot::after{content:''; width:6px; height:6px; border-radius:50%; background:var(--ink);}
+
   /* ── détail ───────────────────────────────────── */
   .detail-head{margin-bottom:14px;}
   .detail-title{font-size:clamp(2.25rem,11vw,3rem); margin:0 0 10px;}
@@ -614,6 +623,18 @@
         Une fois lancé, Instagram met de <b>quelques minutes à 48 h</b> à préparer le fichier. Tu reçois une notification quand c'est prêt.
       </div>
 
+      <div class="panel checklist">
+        <div class="panel-head"><span class="panel-title">Quoi cocher</span><span class="bl-n">export complet</span></div>
+        <ul>
+          <li><span class="ck on">✓</span><span><b>Tout laisser coché</b>, c'est ce qui remplit le plus Explorer.</span></li>
+          <li><span class="ck"></span><span><b>Décoche « Contenu multimédia ».</b> Ce sont tes photos et vidéos : ça alourdit énormément le .zip et l'app ne s'en sert pas.</span></li>
+          <li><span class="ck dot"></span><span>Si Instagram propose une <b>qualité du contenu multimédia</b>, mets <b>« Faible »</b>. Les photos envoyées en messages seront alors légères.</span></li>
+          <li><span class="ck dot"></span><span>Format : <b>JSON</b> (pas HTML).</span></li>
+          <li><span class="ck dot"></span><span>Période : <b>« Depuis le début »</b>.</span></li>
+        </ul>
+        <p class="big-cap" style="margin-top:12px">Pour une simple mise à jour des abonnés, <b>« Followers et suivi(e)s »</b> seul suffit, et l'export arrive plus vite.</p>
+      </div>
+
       <div class="steps">
         <div class="step"><span class="step-num">01</span><div class="step-body">
           <h3 class="step-title">Ouvre tes réglages</h3>
@@ -659,7 +680,7 @@
         <div class="step key"><span class="step-num">07</span><div class="step-body">
           <span class="caps key-tag">Important</span>
           <h3 class="step-title">Coche « Followers et suivi(e)s »</h3>
-          <p class="step-text">Dans <b>Personnaliser les informations</b>, section <b>Contacts</b>. Ça suffit pour le tableau de bord. Pour remplir <b>Explorer</b>, coche aussi : Mentions J'aime, Commentaires, Interactions avec les stories, Enregistrements, Messages, Recherches récentes, Modifications, Connexion et création de profil, Historique des liens, Vos sujets, Publicités. Décoche <b>Contenu multimédia</b> si tu veux un export léger.</p>
+          <p class="step-text">Dans <b>Personnaliser les informations</b>, section <b>Contacts</b>. Ça suffit pour le tableau de bord ; pour Explorer, laisse tout coché sauf « Contenu multimédia » (voir « Quoi cocher » plus haut).</p>
           <div class="mock">
             <div class="mock-top"><span class="mock-section">Contacts</span><span class="mock-blue">Tout sélectionner</span></div>
             <div class="mock-row"><span class="mock-label">Contacts</span><span class="mock-box"></span></div>
