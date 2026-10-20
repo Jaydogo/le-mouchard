@@ -403,6 +403,74 @@
   .path{background:var(--ink); color:var(--cream); border-radius:14px; padding:13px 15px; font-family:var(--mono); font-size:.6875rem; line-height:1.7; word-break:break-word;}
   .path b{color:var(--sage); font-weight:500;}
 
+  /* ── explorer ───────────────────────────────── */
+  .panel{border-radius:24px; padding:18px; background:var(--glass); border:1px solid var(--glass-line); -webkit-backdrop-filter:var(--blur); backdrop-filter:var(--blur); animation:fadeUp .6s var(--spring) both;}
+  .panel + .rows, .panel + .panel, .rows + .panel{margin-top:8px;}
+  .panel-head{display:flex; justify-content:space-between; align-items:baseline; gap:12px;}
+  .panel-title{font-family:var(--serif); font-size:1.375rem; font-weight:400; letter-spacing:-.03em; line-height:1.1;}
+  .ybars{display:flex; align-items:flex-end; gap:4px; height:150px; margin-top:14px;}
+  .ybar{flex:1; min-width:0; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:6px;}
+  .ybar i{display:block; width:100%; min-height:3px; border-radius:7px; background:rgba(26,20,18,.13); transform-origin:bottom; animation:grow .9s var(--spring) both;}
+  .ybar.max i{background:var(--ink);}
+  .ybar.now i{background:var(--lime); box-shadow:inset 0 0 0 1px rgba(26,20,18,.12);}
+  .ybar span{font-family:var(--mono); font-size:.5625rem; color:var(--muted);}
+  .ybar b{font-family:var(--mono); font-size:.5625rem; font-weight:500;}
+  @keyframes grow{from{transform:scaleY(0);}}
+  @keyframes growX{from{transform:scaleX(0);}}
+  .big{font-family:var(--serif); font-weight:300; font-size:4.75rem; letter-spacing:-.05em; line-height:.85; margin-top:14px;}
+  .big-cap{font-size:.875rem; color:var(--muted); line-height:1.5; margin-top:10px; max-width:32ch;}
+  .big-cap b{color:var(--ink); font-weight:600;}
+  .blist{display:flex; flex-direction:column; gap:12px; margin-top:14px;}
+  .bl-row{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:5px 12px; align-items:baseline; text-decoration:none; color:inherit;}
+  .bl-name{font-weight:500; font-size:.9375rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .bl-n{font-family:var(--mono); font-size:.75rem; color:var(--muted); font-variant-numeric:tabular-nums;}
+  .bl-bar{grid-column:1 / 3; height:7px; border-radius:999px; background:rgba(26,20,18,.08); overflow:hidden; display:flex;}
+  .bl-bar i{display:block; height:100%; background:var(--ink); transform-origin:left; animation:growX .9s var(--spring) both;}
+  .bl-bar i.lime{background:var(--lime);}
+  .legend{display:flex; gap:14px; margin-top:12px; font-family:var(--mono); font-size:.625rem; color:var(--muted); letter-spacing:.06em;}
+  .legend i{display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:5px; vertical-align:0;}
+  .stat3{display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:8px; margin-top:14px;}
+  .stat3 div{background:rgba(255,255,255,.65); border-radius:16px; padding:12px; min-width:0;}
+  .stat3 b{display:block; font-family:var(--serif); font-size:1.75rem; font-weight:300; letter-spacing:-.04em; line-height:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .stat3 span{display:block; margin-top:6px; font-family:var(--mono); font-size:.5625rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted);}
+  .tagcloud{display:flex; flex-wrap:wrap; gap:6px; margin-top:14px;}
+  .tag{background:rgba(255,255,255,.75); border-radius:999px; padding:6px 12px; font-size:.8125rem;}
+  .tag b{font-family:var(--mono); font-size:.6875rem; font-weight:500; color:var(--muted); margin-left:4px;}
+  .locked{border-radius:20px; padding:16px 18px; border:1px dashed rgba(26,20,18,.25); color:var(--muted); font-size:.8125rem; line-height:1.5;}
+  .locked b{color:var(--ink); font-weight:600;}
+  .found{display:flex; flex-wrap:wrap; gap:6px; margin-top:10px;}
+  .found span{background:var(--lime); border-radius:999px; padding:5px 11px; font-size:.75rem; font-weight:500; animation:fadeUp .4s var(--spring) both;}
+  .found span b{font-family:var(--mono); font-weight:500; margin-left:4px;}
+  .progress{height:4px; border-radius:999px; background:rgba(26,20,18,.1); overflow:hidden; margin-top:10px; display:none;}
+  .progress i{display:block; height:100%; width:0; background:var(--ink); transition:width .2s linear;}
+
+  .hub{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:8px;}
+  .hub-tile{
+    position:relative; text-align:left; border:1px solid var(--glass-line); cursor:pointer; border-radius:24px; padding:16px;
+    min-height:150px; min-width:0; display:flex; flex-direction:column; justify-content:space-between; gap:14px;
+    background:var(--glass); -webkit-backdrop-filter:var(--blur); backdrop-filter:var(--blur); color:var(--ink); font-family:inherit;
+    transition:transform .4s var(--spring), box-shadow .4s var(--spring); animation:fadeUp .6s var(--spring) both;
+  }
+  .hub-tile:active{transform:scale(.96);}
+  @media (hover:hover){ .hub-tile:hover{box-shadow:0 12px 28px rgba(26,20,18,.1);} }
+  .hub-tile.wide{grid-column:1 / 3; background:var(--ink); color:var(--cream); border-color:var(--ink);}
+  .hub-tile.wide .ybars{height:84px; margin-top:4px;}
+  .hub-tile.wide .ybar i{background:rgba(243,237,227,.22);}
+  .hub-tile.wide .ybar.max i{background:var(--cream);}
+  .hub-tile.wide .ybar.now i{background:var(--lime);}
+  .hub-tile.wide .ybar span, .hub-tile.wide .hub-sub{color:rgba(243,237,227,.6);}
+  .hub-tile.lime{background:var(--lime); border-color:var(--lime);}
+  .hub-tile.rose{background:var(--rose); border-color:var(--rose); color:var(--bordeaux);}
+  .hub-tile.off{background:transparent; border:1px dashed rgba(26,20,18,.25); color:var(--muted);}
+  .hub-top{display:flex; justify-content:space-between; align-items:flex-start; gap:8px;}
+  .hub-ico{width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,.6); flex-shrink:0;}
+  .hub-tile.wide .hub-ico{background:rgba(243,237,227,.12);}
+  .hub-ico svg{width:18px; height:18px;}
+  .hub-arrow{font-size:1.125rem; opacity:.5;}
+  .hub-title{display:block; font-family:var(--serif); font-size:1.625rem; font-weight:400; letter-spacing:-.03em; line-height:1;}
+  .hub-stat{display:block; margin-top:6px; font-family:var(--mono); font-size:.625rem; letter-spacing:.04em; opacity:.75;}
+  .hub-sub{display:block; margin-top:4px; font-size:.75rem; color:var(--muted);}
+
   /* ── détail ───────────────────────────────────── */
   .detail-head{margin-bottom:14px;}
   .detail-title{font-size:clamp(2.25rem,11vw,3rem); margin:0 0 10px;}
@@ -469,6 +537,26 @@
       <div id="home"></div>
     </main>
 
+    <!-- ── EXPLORER ── -->
+    <section class="screen" id="screen-explore" style="display:none;">
+      <div class="page-head">
+        <span class="caps kicker">Ce qu'Instagram ne montre pas</span>
+        <h1 class="serif page-title">Explo<em>rer.</em></h1>
+        <p class="page-sub" id="ex-sub"></p>
+      </div>
+      <div id="explore"></div>
+    </section>
+
+    <!-- ── RUBRIQUE D'EXPLORER ── -->
+    <section class="screen" id="screen-section" style="display:none;">
+      <div class="page-head">
+        <span class="caps kicker">Explorer</span>
+        <h1 class="serif page-title" id="sec-title"></h1>
+        <p class="page-sub" id="sec-sub"></p>
+      </div>
+      <div id="sec-body"></div>
+    </section>
+
     <!-- ── AJOUTER ── -->
     <section class="screen" id="screen-upload" style="display:none;">
       <div class="page-head">
@@ -485,36 +573,26 @@
         <span class="helper-go">→</span>
       </button>
 
-      <div class="caps section-label"><span>Ancien export</span><span id="old-tag">2 fichiers</span></div>
-      <div class="memory" id="memory-card" style="display:none;"></div>
-      <div class="stack" id="old-block">
-        <label class="zone" id="z-of" for="i-of">
+      <div class="caps section-label"><span>Nouvel export</span><span>.zip ou .json</span></div>
+      <div class="stack">
+        <label class="zone" id="z-new" for="i-new">
           <span class="zone-ico"><span>+</span></span>
-          <span class="zone-body"><span class="zone-name">Abonnés</span><span class="zone-hint" id="h-of">followers_1.json</span></span>
+          <span class="zone-body"><span class="zone-name">Ton export Instagram</span><span class="zone-hint" id="h-new">Le .zip entier, ou les fichiers .json</span></span>
           <span class="zone-cta">Choisir</span>
-          <input type="file" id="i-of" accept="application/json,.json" multiple>
-        </label>
-        <label class="zone" id="z-og" for="i-og">
-          <span class="zone-ico"><span>+</span></span>
-          <span class="zone-body"><span class="zone-name">Abonnements</span><span class="zone-hint" id="h-og">following.json</span></span>
-          <span class="zone-cta">Choisir</span>
-          <input type="file" id="i-og" accept="application/json,.json" multiple>
+          <input type="file" id="i-new" accept=".zip,application/zip,application/x-zip-compressed,application/json,.json" multiple>
         </label>
       </div>
+      <div class="progress" id="prog"><i></i></div>
+      <div class="found" id="found"></div>
 
-      <div class="caps section-label"><span>Nouvel export</span><span>2 fichiers</span></div>
-      <div class="stack">
-        <label class="zone" id="z-nf" for="i-nf">
+      <div class="caps section-label"><span>Ancien export</span><span id="old-tag">optionnel</span></div>
+      <div class="memory" id="memory-card" style="display:none;"></div>
+      <div class="stack" id="old-block">
+        <label class="zone" id="z-old" for="i-old">
           <span class="zone-ico"><span>+</span></span>
-          <span class="zone-body"><span class="zone-name">Abonnés</span><span class="zone-hint" id="h-nf">followers_1.json</span></span>
+          <span class="zone-body"><span class="zone-name">Ancien export</span><span class="zone-hint" id="h-old">Pour comparer : .zip ou followers + following</span></span>
           <span class="zone-cta">Choisir</span>
-          <input type="file" id="i-nf" accept="application/json,.json" multiple>
-        </label>
-        <label class="zone" id="z-ng" for="i-ng">
-          <span class="zone-ico"><span>+</span></span>
-          <span class="zone-body"><span class="zone-name">Abonnements</span><span class="zone-hint" id="h-ng">following.json</span></span>
-          <span class="zone-cta">Choisir</span>
-          <input type="file" id="i-ng" accept="application/json,.json" multiple>
+          <input type="file" id="i-old" accept=".zip,application/zip,application/x-zip-compressed,application/json,.json" multiple>
         </label>
       </div>
 
@@ -581,7 +659,7 @@
         <div class="step key"><span class="step-num">07</span><div class="step-body">
           <span class="caps key-tag">Important</span>
           <h3 class="step-title">Coche « Followers et suivi(e)s »</h3>
-          <p class="step-text">Dans <b>Personnaliser les informations</b>, section <b>Contacts</b>. Coche uniquement celle-là : l'export sera bien plus rapide.</p>
+          <p class="step-text">Dans <b>Personnaliser les informations</b>, section <b>Contacts</b>. Ça suffit pour le tableau de bord. Pour remplir <b>Explorer</b>, coche aussi : Mentions J'aime, Commentaires, Interactions avec les stories, Enregistrements, Messages, Recherches récentes, Modifications, Connexion et création de profil, Historique des liens, Vos sujets, Publicités. Décoche <b>Contenu multimédia</b> si tu veux un export léger.</p>
           <div class="mock">
             <div class="mock-top"><span class="mock-section">Contacts</span><span class="mock-blue">Tout sélectionner</span></div>
             <div class="mock-row"><span class="mock-label">Contacts</span><span class="mock-box"></span></div>
@@ -618,7 +696,7 @@
 
         <div class="step"><span class="step-num">11</span><div class="step-body">
           <h3 class="step-title">Récupère le fichier</h3>
-          <p class="step-text">Quand Instagram t'envoie la notification, télécharge le <b>.zip</b> et décompresse-le (sur iPhone : touche le .zip dans l'app Fichiers). Tes deux fichiers sont dans :</p>
+          <p class="step-text">Quand Instagram t'envoie la notification, télécharge le <b>.zip</b>. Dans l'onglet <b>Ajouter</b>, choisis directement ce .zip : l'app le lit sur ton téléphone, rien n'est envoyé nulle part. Tu peux aussi le décompresser et choisir les fichiers .json, par exemple :</p>
           <div class="path">connections › followers_and_following ›<br><b>followers_1.json</b> + <b>following.json</b></div>
           <p class="step-text">S'il y a plusieurs fichiers <b>followers_2.json</b>, <b>followers_3.json</b>… sélectionne-les tous ensemble dans la zone « Abonnés ».</p>
         </div></div>
@@ -657,13 +735,13 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="9" rx="2"/><rect x="13.5" y="3.5" width="7" height="5" rx="2"/><rect x="13.5" y="11.5" width="7" height="9" rx="2"/><rect x="3.5" y="15.5" width="7" height="5" rx="2"/></svg>
       <span>Accueil</span>
     </button>
+    <button class="tab" data-to="screen-explore">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>
+      <span>Explorer</span>
+    </button>
     <button class="tab" data-to="screen-upload">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4"/><path d="M7.5 8.5L12 4l4.5 4.5"/><path d="M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg>
       <span>Ajouter</span>
-    </button>
-    <button class="tab" data-to="screen-tuto">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/></svg>
-      <span>Guide</span>
     </button>
   </nav>
 
@@ -970,7 +1048,7 @@
     const card = $('memory-card');
     if(n){
       const s = history[n-1];
-      $('up-sub').innerHTML = `Ton dernier export est mémorisé. Ajoute <b>juste le nouveau</b> : le tableau de bord se met à jour.`;
+      $('up-sub').innerHTML = `Ton dernier export est mémorisé. Choisis <b>juste le nouveau .zip</b> : tableau de bord et Explorer se mettent à jour.`;
       card.innerHTML = `
         <div class="memory-head">
           <span class="caps muted">Mémorisé</span>
@@ -985,11 +1063,11 @@
       $('mem-toggle').addEventListener('click', ()=> useMemory(!usingMemory));
       useMemory(true);
     } else {
-      $('up-sub').innerHTML = `Première fois : un <b>ancien</b> export et un <b>récent</b>. Ensuite, seul le nouveau suffira.`;
+      $('up-sub').innerHTML = `Choisis le <b>.zip</b> de ton export Instagram. Ajoute aussi un <b>ancien</b> export pour voir tout de suite qui est parti.`;
       card.style.display = 'none';
       usingMemory = false;
       $('old-block').style.display = 'flex';
-      $('old-tag').textContent = '2 fichiers';
+      $('old-tag').textContent = 'optionnel';
       sync();
     }
   }
@@ -999,10 +1077,10 @@
     sets.of = on ? toMap(s.followers) : null;
     sets.og = on ? toMap(s.following) : null;
     $('old-block').style.display = on ? 'none' : 'flex';
-    $('old-tag').textContent = on ? 'Automatique' : '2 fichiers';
+    $('old-tag').textContent = on ? 'Automatique' : 'optionnel';
     $('mem-toggle').textContent = on ? 'Utiliser d\'autres fichiers' : 'Reprendre l\'export mémorisé';
     $('memory-card').classList.toggle('off', !on);
-    if(!on) ['z-of','z-og'].forEach(resetZone);
+    if(!on) setZone('z-old', false, 'Pour comparer : .zip ou followers + following', 'Choisir');
     sync();
   }
 
@@ -1010,6 +1088,104 @@
   const showNote = m => { note.textContent = m; note.style.display = 'block'; };
   const clearNote = () => { note.style.display = 'none'; };
 
+  /* Lecture d'un .zip directement dans le navigateur (DecompressionStream), sans tout charger en mémoire. */
+  async function readZip(file){
+    const tailLen = Math.min(file.size, 65557);
+    const tail = new DataView(await file.slice(file.size - tailLen).arrayBuffer());
+    let eocd = -1;
+    for(let i = tail.byteLength - 22; i >= 0; i--){ if(tail.getUint32(i, true) === 0x06054b50){ eocd = i; break; } }
+    if(eocd < 0) throw 'zip';
+    let count = tail.getUint16(eocd + 10, true), cdSize = tail.getUint32(eocd + 12, true), cdOff = tail.getUint32(eocd + 16, true);
+    if((cdOff === 0xFFFFFFFF || count === 0xFFFF) && eocd >= 20 && tail.getUint32(eocd - 20, true) === 0x07064b50){
+      const z64 = Number(tail.getBigUint64(eocd - 12, true));
+      const z = new DataView(await file.slice(z64, z64 + 56).arrayBuffer());
+      count = Number(z.getBigUint64(32, true)); cdSize = Number(z.getBigUint64(40, true)); cdOff = Number(z.getBigUint64(48, true));
+    }
+    const cd = new DataView(await file.slice(cdOff, cdOff + cdSize).arrayBuffer());
+    const dec = new TextDecoder(), out = [];
+    let p = 0;
+    for(let k = 0; k < count && p + 46 <= cd.byteLength; k++){
+      if(cd.getUint32(p, true) !== 0x02014b50) break;
+      const method = cd.getUint16(p + 10, true);
+      let csize = cd.getUint32(p + 20, true), usize = cd.getUint32(p + 24, true), lho = cd.getUint32(p + 42, true);
+      const nlen = cd.getUint16(p + 28, true), xlen = cd.getUint16(p + 30, true), clen = cd.getUint16(p + 32, true);
+      const name = dec.decode(new Uint8Array(cd.buffer, p + 46, nlen));
+      if(csize === 0xFFFFFFFF || usize === 0xFFFFFFFF || lho === 0xFFFFFFFF){
+        let q = p + 46 + nlen; const end = q + xlen;
+        while(q + 4 <= end){
+          const id = cd.getUint16(q, true), sz = cd.getUint16(q + 2, true);
+          if(id === 1){
+            let r = q + 4;
+            if(usize === 0xFFFFFFFF){ usize = Number(cd.getBigUint64(r, true)); r += 8; }
+            if(csize === 0xFFFFFFFF){ csize = Number(cd.getBigUint64(r, true)); r += 8; }
+            if(lho === 0xFFFFFFFF){ lho = Number(cd.getBigUint64(r, true)); }
+          }
+          q += 4 + sz;
+        }
+      }
+      p += 46 + nlen + xlen + clen;
+      if(name.endsWith('/')) continue;
+      out.push({ name, size:usize, text: async ()=>{
+        const h = new DataView(await file.slice(lho, lho + 30).arrayBuffer());
+        const start = lho + 30 + h.getUint16(26, true) + h.getUint16(28, true);
+        const blob = file.slice(start, start + csize);
+        if(method === 0) return blob.text();
+        if(method !== 8 || typeof DecompressionStream === 'undefined') throw 'method';
+        return new Response(blob.stream().pipeThrough(new DecompressionStream('deflate-raw'))).text();
+      }});
+    }
+    return out;
+  }
+
+  // Instagram encode l'UTF-8 octet par octet (« Ã© » pour « é ») : on le répare.
+  const fix = s => { if(typeof s !== 'string') return s; try{ return /[Â-ô][\u0080-¿]/.test(s) ? decodeURIComponent(escape(s)) : s; }catch(e){ return s; } };
+  const USERNAME = /^[A-Za-z0-9._]{1,30}$/;
+  const USER_KEY = /^(nom de profil|username|nom d.utilisateur|propri[ée]taire.*|media owner|owner|auteur|author|compte|account|search|recherche)$/i;
+  const userFromUrl = v => { const m = /instagram\.com\/(?:_u\/)?([A-Za-z0-9._]{1,30})\/?(?:$|\?)/.exec(v || ''); return m && !/^(p|reel|reels|stories|explore|tv|direct|accounts)$/i.test(m[1]) ? m[1] : null; };
+  function pairs(n){
+    const out = [];
+    const lv = arr => arr.forEach(x=>{
+      if(!x || typeof x !== 'object') return;
+      if('value' in x) out.push([fix(String(x.label || '')), fix(String(x.value)), x.timestamp || 0]);
+      if(Array.isArray(x.dict)) x.dict.forEach(d=>{ if(Array.isArray(d.dict)) lv(d.dict); else lv([d]); });
+    });
+    if(Array.isArray(n.label_values)) lv(n.label_values);
+    if(n.string_map_data && typeof n.string_map_data === 'object')
+      Object.entries(n.string_map_data).forEach(([k,v])=> out.push([fix(k), fix(v && v.value != null ? String(v.value) : (v && v.href) || ''), (v && v.timestamp) || 0]));
+    return out;
+  }
+  function entryUser(n){
+    if(typeof n.title === 'string' && USERNAME.test(n.title) && (Array.isArray(n.string_list_data) || n.string_map_data)) return n.title;
+    const ps = pairs(n);
+    for(const [k,v] of ps) if(USER_KEY.test(k.trim()) && USERNAME.test(v)) return v;
+    for(const [,v] of ps){ const u = userFromUrl(v); if(u) return u; }
+    if(Array.isArray(n.string_list_data) && n.string_list_data[0]){
+      const e = n.string_list_data[0];
+      if(USERNAME.test(e.value || '')) return e.value;
+      const u = userFromUrl(e.href); if(u) return u;
+    }
+    return null;
+  }
+  function entryTs(n){
+    if(n.timestamp) return n.timestamp;
+    if(Array.isArray(n.string_list_data) && n.string_list_data[0] && n.string_list_data[0].timestamp) return n.string_list_data[0].timestamp;
+    for(const [,,t] of pairs(n)) if(t) return t;
+    return 0;
+  }
+  // Événements « compte + date » : J'aime, commentaires, stories, recherches, enregistrements, listes de relations.
+  function events(json){
+    const out = [];
+    (function walk(n){
+      if(Array.isArray(n)) return n.forEach(walk);
+      if(!n || typeof n !== 'object') return;
+      if(Array.isArray(n.string_list_data) || Array.isArray(n.label_values) || n.string_map_data){
+        const u = entryUser(n);
+        if(u){ out.push({ u, ts:entryTs(n), fbid:n.fbid || null }); return; }
+      }
+      Object.values(n).forEach(walk);
+    })(json);
+    return out;
+  }
   function extract(json){
     const found = new Map();
     const ok = s => typeof s === 'string' && s.length && /^[a-zA-Z0-9._]+$/.test(s);
@@ -1019,61 +1195,285 @@
         if(ok(n.title) && Array.isArray(n.string_list_data)){
           const e = n.string_list_data[0];
           found.set(n.title, { href:(e&&e.href)||'https://instagram.com/'+n.title, ts:e&&e.timestamp });
+          return;
         }
-        if(ok(n.value)) found.set(n.value, { href:n.href||'https://instagram.com/'+n.value, ts:n.timestamp });
-        if(ok(n.username) && !n.value) found.set(n.username, { href:n.href||'https://instagram.com/'+n.username, ts:n.timestamp });
+        if(ok(n.value)){ found.set(n.value, { href:n.href||'https://instagram.com/'+n.value, ts:n.timestamp }); return; }
+        if(ok(n.username) && !n.value){ found.set(n.username, { href:n.href||'https://instagram.com/'+n.username, ts:n.timestamp }); return; }
+        if(Array.isArray(n.label_values)){ const u = entryUser(n); if(u){ found.set(u, { href:'https://instagram.com/'+u, ts:entryTs(n) }); return; } }
         Object.values(n).forEach(walk);
       }
     })(json);
     return found;
   }
-  const readOne = f => new Promise((res,rej)=>{
-    const r = new FileReader();
-    r.onload = ()=>{ try{ const m = extract(JSON.parse(r.result)); res(m.size?m:null); }catch(e){ rej('parse'); } };
-    r.onerror = ()=>rej('read');
-    r.readAsText(f);
-  });
-  const readAll = files => Promise.all(files.map(readOne)).then(ms=>{
-    const merged = new Map();
-    ms.forEach(m=>{ if(m) m.forEach((v,k)=>merged.set(k,v)); });
-    if(!merged.size) return Promise.reject('empty');
-    return merged;
-  });
-
-  const ZONES = { 'z-of':'of', 'z-og':'og', 'z-nf':'nf', 'z-ng':'ng' };
-  function resetZone(zid){
-    const z = $(zid), key = ZONES[zid];
-    z.classList.remove('filled');
-    z.querySelector('.zone-hint').textContent = key.endsWith('f') ? 'followers_1.json' : 'following.json';
-    z.querySelector('.zone-cta').textContent = 'Choisir';
-    if(!(usingMemory && (key==='of' || key==='og'))) sets[key] = null;
-    fileDates[key] = 0;
+  // Noms simples (sujets, annonceurs…)
+  function names(json){
+    const out = [];
+    (function walk(n){
+      if(Array.isArray(n)) return n.forEach(walk);
+      if(!n || typeof n !== 'object') return;
+      if(typeof n.advertiser_name === 'string'){ out.push(fix(n.advertiser_name)); return; }
+      const ps = pairs(n);
+      const hit = ps.find(([k])=>/^(nom|name|advertiser.?name|topic|sujet|titre|title|annonceur)$/i.test(k.trim()));
+      if(hit && hit[1]){ out.push(hit[1]); return; }
+      if(Array.isArray(n.string_list_data) && n.string_list_data[0] && n.string_list_data[0].value){ out.push(fix(n.string_list_data[0].value)); return; }
+      if(ps.length === 1 && ps[0][1]){ out.push(ps[0][1]); return; }
+      Object.values(n).forEach(walk);
+    })(json);
+    return [...new Set(out.filter(x=>x && x.length < 120))];
   }
-  Object.keys(ZONES).forEach(zid=>{
-    const z = $(zid), key = ZONES[zid], i = z.querySelector('input');
+  function records(json){
+    const out = [];
+    (function walk(n){
+      if(Array.isArray(n)) return n.forEach(walk);
+      if(!n || typeof n !== 'object') return;
+      const ps = pairs(n);
+      if(ps.length){ out.push({ ts:entryTs(n) || 0, title:fix(n.title || ''), ps }); return; }
+      Object.values(n).forEach(walk);
+    })(json);
+    return out;
+  }
+  function tally(evs){
+    const m = new Map();
+    evs.forEach(e=>{ const k = e.u; const x = m.get(k) || { c:0, l:0 }; x.c++; if(e.ts > x.l) x.l = e.ts; m.set(k, x); });
+    return { total:evs.length, top:[...m].sort((a,b)=>b[1].c - a[1].c).slice(0, 400).map(([u,x])=>[u, x.c, x.l]) };
+  }
+  const yearsOf = tss => { const m = {}; tss.forEach(t=>{ if(t > 0){ const y = new Date(t*1000).getFullYear(); m[y] = (m[y]||0) + 1; } }); return Object.entries(m).map(([y,n])=>[+y,n]).sort((a,b)=>a[0]-b[0]); };
+
+  function kindOf(path){
+    const p = path.toLowerCase().replace(/\\/g,'/');
+    if(!p.endsWith('.json')) return null;
+    if(/\/messages\/(inbox|message_requests)\/[^/]+\/message_\d+\.json$/.test(p)) return 'message';
+    if(/(^|\/)followers_\d+\.json$/.test(p)) return 'followers';
+    if(/(^|\/)following\.json$/.test(p)) return 'following';
+    if(/pending_follow_requests/.test(p)) return 'pending';
+    if(/recently_unfollowed/.test(p)) return 'myUnfollows';
+    if(/close_friends/.test(p)) return 'closeFriends';
+    if(/recent_follow_requests/.test(p)) return 'recentRequests';
+    if(/blocked_profiles|blocked_accounts/.test(p)) return 'blocked';
+    if(/restricted_profiles|restricted_accounts/.test(p)) return 'restricted';
+    if(/removed_suggestions/.test(p)) return 'removedSuggestions';
+    if(/liked_posts|\/likes\/liked|likes_media/.test(p)) return 'likes';
+    if(/liked_comments/.test(p)) return 'commentLikes';
+    if(/\/comments\/|post_comments|reels_comments/.test(p)) return 'comments';
+    if(/story_interactions|story_likes|emoji_sliders|polls|quizzes|questions|countdowns|story_reaction/.test(p)) return 'stories';
+    if(/saved_posts|saved_collections/.test(p)) return 'saved';
+    if(/account_searches|profile_searches|recent_searches|searches/.test(p)) return /word|phrase|tag|keyword|place|lieu/.test(p.split('/').pop()) ? null : 'searches';
+    if(/profile_changes/.test(p)) return 'changes';
+    if(/login_activity/.test(p)) return 'logins';
+    if(/your_topics|recommended_topics/.test(p)) return 'topics';
+    if(/advertisers_using/.test(p)) return 'advertisers';
+    if(/link_history|browser_history/.test(p)) return 'links';
+    if(/\/content\/posts_\d+\.json$|(^|\/)posts_\d+\.json$/.test(p)) return 'posts';
+    if(/\/content\/stories\.json$|(^|\/)stories\.json$/.test(p)) return 'myStories';
+    if(/insights/.test(p)) return 'insights';
+    return null;
+  }
+
+  // Lit des fichiers (.zip et/ou .json) et regroupe tout ce qui est reconnu.
+  async function ingest(files, followOnly, onProgress){
+    const items = [];
+    for(const f of files){
+      if(/\.zip$/i.test(f.name) || /zip/.test(f.type)){
+        (await readZip(f)).forEach(e=> items.push({ path:e.name, text:e.text, size:e.size }));
+      } else {
+        items.push({ path:f.webkitRelativePath || f.name, text:()=>f.text(), size:f.size });
+      }
+    }
+    const lm = Math.max(0, ...files.map(f=>f.lastModified || 0));
+    const B = { f:null, g:null, lm, ev:{}, msgs:new Map(), x:{} };
+    const todo = items.map(it=>({ ...it, kind:kindOf(it.path) })).filter(it=>it.kind && (!followOnly || it.kind === 'followers' || it.kind === 'following') && it.size < 60e6);
+    let done = 0;
+    for(const it of todo){
+      let json;
+      try{ json = JSON.parse(await it.text()); }catch(e){ done++; continue; }
+      const k = it.kind;
+      if(k === 'followers'){ const m = extract(json); B.f = B.f || new Map(); m.forEach((v,u)=>B.f.set(u,v)); }
+      else if(k === 'following'){ const m = extract(json); B.g = B.g || new Map(); m.forEach((v,u)=>B.g.set(u,v)); }
+      else if(k === 'message'){
+        const folder = it.path.split('/').slice(-2)[0];
+        const t = B.msgs.get(folder) || { title:'', parts:[], msgs:[] };
+        if(json.title) t.title = fix(json.title);
+        if(Array.isArray(json.participants)) t.parts = json.participants.map(x=>fix(x.name));
+        (json.messages || []).forEach(m=> t.msgs.push([fix(m.sender_name), m.timestamp_ms || 0]));
+        B.msgs.set(folder, t);
+      }
+      else if(['changes','logins','links','insights'].includes(k)) (B.ev[k] = B.ev[k] || []).push(...records(json));
+      else if(['topics','advertisers'].includes(k)) (B.ev[k] = B.ev[k] || []).push(...names(json));
+      else if(['posts','myStories'].includes(k)){
+        const ts = [];
+        (Array.isArray(json) ? json : Object.values(json).find(Array.isArray) || []).forEach(x=>{
+          const t = x.creation_timestamp || (x.media && x.media[0] && x.media[0].creation_timestamp) || 0; if(t) ts.push(t);
+        });
+        (B.ev[k] = B.ev[k] || []).push(...ts);
+      }
+      else (B.ev[k] = B.ev[k] || []).push(...events(json));
+      done++;
+      if(onProgress && (done % 25 === 0 || done === todo.length)) onProgress(done, todo.length);
+    }
+    return B;
+  }
+
+  // Résumé compact de ce qui sera gardé (pas les messages bruts).
+  function summarize(B){
+    const x = {}, ev = B.ev;
+    const lists = {};
+    ['pending','myUnfollows','closeFriends','recentRequests','blocked','restricted'].forEach(k=>{
+      if(ev[k]) lists[k] = ev[k].map(e=>[e.u, e.ts || 0]);
+    });
+    if(Object.keys(lists).length) x.lists = lists;
+    if(ev.removedSuggestions) x.removedSuggestions = ev.removedSuggestions.length;
+    const ids = {};
+    Object.values(ev).forEach(arr=> Array.isArray(arr) && arr.forEach(e=>{ if(e && e.fbid && e.u) ids[e.fbid] = e.u; }));
+    if(Object.keys(ids).length) x.ids = ids;
+    ['likes','commentLikes','comments','stories','saved','searches'].forEach(k=>{
+      if(ev[k] && ev[k].length) x[k] = { ...tally(ev[k]), years:yearsOf(ev[k].map(e=>e.ts)) };
+    });
+    if(B.msgs.size){
+      const freq = new Map();
+      B.msgs.forEach(t=> new Set(t.parts.length ? t.parts : t.msgs.map(m=>m[0])).forEach(n=> freq.set(n, (freq.get(n)||0) + 1)));
+      const me = [...freq].sort((a,b)=>b[1]-a[1])[0][0];
+      const threads = [];
+      let total = 0;
+      B.msgs.forEach((t, folder)=>{
+        if(!t.msgs.length) return;
+        t.msgs.sort((a,b)=>a[1]-b[1]);
+        const mine = t.msgs.filter(m=>m[0] === me).length;
+        total += t.msgs.length;
+        const uMatch = /^(.+?)_\d{5,}$/.exec(folder);
+        threads.push({ n:t.title || folder, u:uMatch ? uMatch[1] : '', c:t.msgs.length, m:mine,
+          f:Math.round(t.msgs[0][1]/1000), l:Math.round(t.msgs[t.msgs.length-1][1]/1000),
+          s:t.msgs[0][0] === me ? 1 : 0, o:(t.parts.length || 2) <= 2 ? 1 : 0 });
+      });
+      threads.sort((a,b)=>b.c - a.c);
+      x.messages = { me, total, count:threads.length, threads:threads.slice(0, 400) };
+    }
+    const acc = {};
+    if(ev.changes) acc.changes = ev.changes.sort((a,b)=>b.ts-a.ts).slice(0, 60).map(r=>{
+      const get = re => (r.ps.find(([k])=>re.test(k)) || [])[1];
+      const what = get(/modifi|changed|champ|field/i), before = get(/pr[ée]c[ée]d|previous|ancien|old/i), after = get(/nouv|new/i);
+      return [r.ts, what && (before || after) ? `${what} : ${before || '—'} → ${after || '—'}` : r.ps.slice(0,3).map(p=>p[0]+' : '+p[1]).join(' · ')];
+    });
+    if(ev.logins){
+      const dev = {}, place = {};
+      let last = 0;
+      ev.logins.forEach(r=>{
+        const t = r.ts || Date.parse(r.title)/1000 || 0; if(t > last) last = t;
+        r.ps.forEach(([k,v])=>{
+          if(/agent|appareil|device/i.test(k)){ const d = /iPhone|iPad|Android|Macintosh|Windows|Linux|CrOS/.exec(v); const n = d ? ({Macintosh:'Mac', CrOS:'Chromebook'}[d[0]] || d[0]) : 'Autre'; dev[n] = (dev[n]||0) + 1; }
+          if(/ville|city|localisation|location|lieu|pays|country|r[ée]gion|region/i.test(k) && v && v.length < 60){ place[v] = (place[v]||0) + 1; }
+        });
+      });
+      acc.logins = { n:ev.logins.length, last, devices:Object.entries(dev).sort((a,b)=>b[1]-a[1]), places:Object.entries(place).sort((a,b)=>b[1]-a[1]).slice(0,12) };
+    }
+    if(ev.topics) acc.topics = ev.topics.slice(0, 200);
+    if(ev.advertisers) acc.advertisers = ev.advertisers.slice(0, 2000);
+    if(ev.links){
+      const dom = {};
+      ev.links.forEach(r=> r.ps.forEach(([,v])=>{ const m = /^https?:\/\/(?:www\.)?([^/?#]+)/i.exec(v || ''); if(m) dom[m[1]] = (dom[m[1]]||0) + 1; }));
+      acc.links = Object.entries(dom).sort((a,b)=>b[1]-a[1]).slice(0, 60);
+    }
+    if(ev.posts) acc.posts = yearsOf(ev.posts);
+    if(ev.myStories) acc.myStories = yearsOf(ev.myStories);
+    if(ev.insights) acc.insights = ev.insights.flatMap(r=>r.ps).filter(([k,v])=>k && /^[\d\s.,%+-]+$/.test(v)).slice(0, 40).map(([k,v])=>[k,v]);
+    if(Object.keys(acc).length) x.account = acc;
+    return x;
+  }
+
+  /* Données Explorer (gardées sur le téléphone) */
+  const KX = 'mouchard-extras';
+  let extras = {};
+  try{ extras = JSON.parse(Store.get(KX) || '{}') || {}; }catch(e){ extras = {}; }
+  function mergeExtras(x){
+    if(x.ids){
+      const before = extras.ids || {};
+      const ren = extras.renamedSure || [];
+      Object.entries(x.ids).forEach(([id,u])=>{ if(before[id] && before[id] !== u && !ren.some(r=>r[0]===before[id] && r[1]===u)) ren.push([before[id], u, today()]); });
+      extras.renamedSure = ren.slice(-300);
+      extras.ids = { ...before, ...x.ids };
+    }
+    Object.keys(x).forEach(k=>{
+      if(k === 'ids') return;
+      if(k === 'account' || k === 'lists') extras[k] = { ...(extras[k] || {}), ...x[k] };
+      else extras[k] = x[k];
+    });
+    extras.date = today();
+    try{ Store.set(KX, JSON.stringify(extras)); return true; }
+    catch(e){ if(extras.messages){ extras.messages.threads = extras.messages.threads.slice(0, 120); } try{ Store.set(KX, JSON.stringify(extras)); return true; }catch(e2){ return false; } }
+  }
+  const hasExtras = x => Object.keys(x).length > 0;
+
+  const FOUND = {
+    lists:'Relations', likes:"J'aime", commentLikes:"J'aime commentaires", comments:'Commentaires', stories:'Stories', saved:'Enregistrements',
+    searches:'Recherches', messages:'Messages', account:'Compte'
+  };
+  let incoming = null;   // { B, x } du nouvel export
+  const prog = (d,t) => { $('prog').style.display = 'block'; $('prog').firstElementChild.style.width = (t ? d/t*100 : 0) + '%'; };
+
+  function setZone(id, filled, hint, cta){
+    const z = $(id);
+    z.classList.toggle('filled', filled);
+    z.querySelector('.zone-hint').textContent = hint;
+    z.querySelector('.zone-cta').textContent = cta;
+  }
+  function resetZones(){
+    setZone('z-new', false, 'Le .zip entier, ou les fichiers .json', 'Choisir');
+    setZone('z-old', false, 'Pour comparer : .zip ou followers + following', 'Choisir');
+    $('found').innerHTML = ''; $('prog').style.display = 'none';
+    incoming = null;
+    if(!usingMemory){ sets.of = sets.og = null; }
+    sets.nf = sets.ng = null;
+  }
+  function bindZone(id, onFiles){
+    const z = $(id), i = z.querySelector('input');
     z.addEventListener('dragover', e=>{ e.preventDefault(); z.classList.add('dragover'); });
     z.addEventListener('dragleave', ()=> z.classList.remove('dragover'));
-    z.addEventListener('drop', e=>{ e.preventDefault(); z.classList.remove('dragover'); if(e.dataTransfer.files.length) take([...e.dataTransfer.files]); });
-    i.addEventListener('change', e=>{ if(e.target.files.length) take([...e.target.files]); i.value = ''; });
-    function take(files){
-      clearNote();
-      readAll(files).then(m=>{
-        z.classList.add('filled');
-        z.querySelector('.zone-hint').textContent = fmt(m.size) + ' comptes lus';
-        z.querySelector('.zone-cta').textContent = 'Changer';
-        sets[key] = m;
-        fileDates[key] = Math.max(...files.map(f=>f.lastModified||0));
-        sync();
-      }).catch(err=>{
-        resetZone(zid); sync();
-        showNote(err==='parse' ? "Ce fichier n'est pas un export JSON Instagram valide."
-               : err==='empty' ? "Aucun pseudo trouvé dans ce fichier."
-               : "Impossible de lire ce fichier.");
-      });
+    z.addEventListener('drop', e=>{ e.preventDefault(); z.classList.remove('dragover'); if(e.dataTransfer.files.length) onFiles([...e.dataTransfer.files]); });
+    i.addEventListener('change', e=>{ if(e.target.files.length) onFiles([...e.target.files]); i.value = ''; });
+  }
+  bindZone('z-new', async files=>{
+    clearNote();
+    setZone('z-new', false, 'Lecture en cours…', '…');
+    $('found').innerHTML = '';
+    try{
+      const B = await ingest(files, false, prog);
+      const x = summarize(B);
+      $('prog').style.display = 'none';
+      const chips = [];
+      if(B.f) chips.push(['Abonnés', fmt(B.f.size)]);
+      if(B.g) chips.push(['Abonnements', fmt(B.g.size)]);
+      Object.keys(FOUND).forEach(k=>{ if(x[k]) chips.push([FOUND[k], k === 'messages' ? fmt(x.messages.count) + ' conv.' : x[k].total != null ? fmt(x[k].total) : '✓']); });
+      if(!chips.length) throw 'empty';
+      if((B.f && !B.g) || (B.g && !B.f)) showNote(B.f ? "Il manque following.json pour mettre à jour les abonnés." : "Il manque followers_1.json pour mettre à jour les abonnés.");
+      incoming = { B, x };
+      sets.nf = B.f && B.g ? B.f : null; sets.ng = B.f && B.g ? B.g : null;
+      fileDates.nf = fileDates.ng = B.lm;
+      setZone('z-new', true, chips.length + ' type' + (chips.length>1?'s':'') + ' de données trouvé' + (chips.length>1?'s':''), 'Changer');
+      $('found').innerHTML = chips.map((c,i)=>`<span style="animation-delay:${i*40}ms">${c[0]}<b>${c[1]}</b></span>`).join('');
+    }catch(err){
+      incoming = null; sets.nf = sets.ng = null;
+      setZone('z-new', false, 'Le .zip entier, ou les fichiers .json', 'Choisir');
+      $('prog').style.display = 'none';
+      showNote(err === 'zip' ? "Ce .zip n'a pas pu être lu." : err === 'method' ? "Ce .zip utilise un format que ce navigateur ne sait pas lire : décompresse-le et choisis les .json." : "Aucune donnée Instagram reconnue dans ces fichiers.");
     }
+    sync();
+  });
+  bindZone('z-old', async files=>{
+    clearNote();
+    setZone('z-old', false, 'Lecture en cours…', '…');
+    try{
+      const B = await ingest(files, true);
+      if(!B.f || !B.g) throw 'empty';
+      sets.of = B.f; sets.og = B.g; fileDates.of = fileDates.og = B.lm;
+      setZone('z-old', true, fmt(B.f.size) + ' abonnés · ' + fmt(B.g.size) + ' suivis', 'Changer');
+    }catch(err){
+      sets.of = sets.og = null;
+      setZone('z-old', false, 'Pour comparer : .zip ou followers + following', 'Choisir');
+      showNote("Ancien export : il faut followers_1.json et following.json (ou le .zip).");
+    }
+    sync();
   });
   function sync(){
-    $('go-btn').disabled = !(sets.of && sets.og && sets.nf && sets.ng);
+    $('go-btn').disabled = !(incoming && ((sets.nf && sets.ng) || hasExtras(incoming.x)));
   }
 
   // Date d'un export : date du fichier si cohérente, sinon dernier suivi enregistré.
@@ -1087,21 +1487,27 @@
   }
 
   $('go-btn').addEventListener('click', ()=>{
-    const newDate = exportDate(sets.nf, sets.ng, Math.max(fileDates.nf, fileDates.ng));
-    if(!usingMemory){
-      let oldDate = exportDate(sets.of, sets.og, Math.max(fileDates.of, fileDates.og));
-      if(oldDate >= newDate) oldDate = shiftDay(newDate, -1);
-      addSnapshot(sets.of, sets.og, oldDate);
+    if(!incoming) return;
+    let saved = true, snap = false;
+    if(sets.nf && sets.ng){
+      const newDate = exportDate(sets.nf, sets.ng, Math.max(fileDates.nf, fileDates.ng));
+      if(!usingMemory && sets.of && sets.og){
+        let oldDate = exportDate(sets.of, sets.og, Math.max(fileDates.of, fileDates.og));
+        if(oldDate >= newDate) oldDate = shiftDay(newDate, -1);
+        addSnapshot(sets.of, sets.og, oldDate);
+      }
+      addSnapshot(sets.nf, sets.ng, newDate);
+      saved = saveHistory();
+      snap = true;
     }
-    addSnapshot(sets.nf, sets.ng, newDate);
-    const saved = saveHistory();
-    ['z-of','z-og','z-nf','z-ng'].forEach(resetZone);
-    sets.of = sets.og = sets.nf = sets.ng = null;
+    if(hasExtras(incoming.x)) saved = mergeExtras(incoming.x) && saved;
+    resetZones();
     computeDiffs();
     renderHome();
+    renderExplore();
     renderUpload();
-    go('screen-home', 'tab');
-    toast(saved ? 'Tableau de bord mis à jour' : 'Mis à jour (mémoire pleine)');
+    go(snap ? 'screen-home' : 'screen-explore', 'tab');
+    toast(!saved ? 'Mis à jour (mémoire pleine)' : snap ? 'Tableau de bord mis à jour' : 'Explorer mis à jour');
   });
 
   let toastT = 0;
@@ -1112,25 +1518,301 @@
     toastT = setTimeout(()=> $('toast').classList.remove('show'), 2400);
   }
 
+  /* ── explorer ── */
+  let LISTS = {};
+  const dur = sec => {
+    sec = Math.abs(sec);
+    if(sec < 3600) return Math.max(1, Math.round(sec / 60)) + ' min';
+    if(sec < 86400) return Math.round(sec / 3600) + ' h';
+    const d = Math.round(sec / 86400);
+    if(d < 31) return d + ' jour' + (d>1?'s':'');
+    const m = Math.round(d / 30.4);
+    if(m < 12) return m + ' mois';
+    const y = Math.round(d / 365 * 10) / 10;
+    return String(y).replace('.', ',') + ' an' + (y >= 2 ? 's' : '');
+  };
+  const dateFr = t => t ? human(new Date(t*1000).toISOString()) : '';
+  function reg(key, cat, items){ LISTS[key] = { cat, items }; return key; }
+  function rowHTML(key, i){
+    const L = LISTS[key];
+    return `<button class="row" data-list="${key}" style="animation-delay:${Math.min(i*40,300)}ms">
+      <span class="dot" style="background:${L.cat.dot}"></span>
+      <span class="row-name">${L.cat.label}</span>
+      <span class="row-count" data-count="${L.items.length}">0</span>
+      <span class="row-chev">›</span>
+    </button>`;
+  }
+  const rows = keys => `<div class="rows">${keys.map(rowHTML).join('')}</div>`;
+  const label = (l, r) => `<div class="caps section-label"><span>${l}</span><span>${r || ''}</span></div>`;
+  const locked = html => `<div class="locked">${html}</div>`;
+  function barList(items, opts){
+    opts = opts || {};
+    const max = Math.max(1, ...items.map(x=>x.v));
+    return `<div class="blist">${items.map((x,i)=>{
+      const inner = `<span class="bl-name">${esc(x.name)}</span><span class="bl-n">${fmt(x.v)}${x.sub ? ' · ' + esc(x.sub) : ''}</span>
+        <span class="bl-bar">${x.split != null
+          ? `<i style="width:${x.split/max*100}%; animation-delay:${i*60}ms"></i><i class="lime" style="width:${(x.v-x.split)/max*100}%; animation-delay:${i*60}ms"></i>`
+          : `<i style="width:${x.v/max*100}%; animation-delay:${i*60}ms"></i>`}</span>`;
+      return x.u ? `<a class="bl-row" href="https://www.instagram.com/${encodeURIComponent(x.u)}/" target="_blank" rel="noopener">${inner}</a>` : `<div class="bl-row">${inner}</div>`;
+    }).join('')}</div>`;
+  }
+  function yearBars(pairs){
+    if(!pairs.length) return '';
+    const y0 = pairs[0][0], y1 = Math.max(pairs[pairs.length-1][0], new Date().getFullYear());
+    const m = Object.fromEntries(pairs), max = Math.max(...pairs.map(p=>p[1]));
+    const ys = []; for(let y = y0; y <= y1; y++) ys.push(y);
+    const now = new Date().getFullYear();
+    return `<div class="ybars" aria-hidden="true">${ys.map((y,i)=>{
+      const v = m[y] || 0, cls = y === now ? 'now' : v === max ? 'max' : '';
+      return `<div class="ybar ${cls}">${v === max || y === now ? `<b>${fmt(v)}</b>` : ''}<i style="height:${v/max*100}%; animation-delay:${i*35}ms"></i><span>${String(y).slice(2)}</span></div>`;
+    }).join('')}</div>`;
+  }
+  const C = {
+    ink:{ dot:'var(--ink)', av:'var(--soft)', avInk:'var(--ink)' },
+    lime:{ dot:'var(--lime); box-shadow:inset 0 0 0 1.5px var(--ink)', av:'var(--lime)', avInk:'var(--ink)' },
+    rose:{ dot:'var(--bordeaux)', av:'var(--rose)', avInk:'var(--bordeaux)' },
+    mute:{ dot:'var(--muted)', av:'var(--paper)', avInk:'var(--muted)' }
+  };
+  const cat = (label, desc, tone, extra) => ({ label, desc, ...C[tone || 'ink'], ...(extra || {}) });
+
+  function renderExplore(){
+    LISTS = {};
+    const box = $('explore');
+    const n = history.length, X = extras;
+    const last = n ? history[n-1] : null;
+    const F = last ? toMap(last.followers) : new Map(), G = last ? toMap(last.following) : new Map();
+    const Fl = new Set([...F.keys()].map(low)), Gl = new Set([...G.keys()].map(low));
+    let html = '';
+    const stats = {};
+    $('ex-sub').innerHTML = n || X.date
+      ? `Tout est calculé sur ton téléphone à partir de tes exports${X.date ? ` · données ajoutées le <b>${human(X.date)}</b>` : ''}.`
+      : `Ajoute ton export Instagram pour voir ce que l'app officielle ne montre pas.`;
+
+    if(!n && !X.date){
+      box.innerHTML = locked(`Rien pour l'instant. Va dans <b>Ajouter</b> et choisis le .zip de ton export Instagram.`) +
+        `<div class="add-cta"><button class="btn" data-go="screen-upload">Ajouter mon export <span class="arrow">→</span></button></div>`;
+      bindGo(box); return;
+    }
+
+    if(n){
+      /* Croissance depuis le début */
+      const fts = [...F.values()].map(v=>v.ts).filter(Boolean);
+      const years = yearsOf(fts);
+      const best = years.slice().sort((a,b)=>b[1]-a[1])[0];
+      const oldest = Math.min(...fts);
+      stats.growth = best ? 'record : ' + best[0] + ' · +' + fmt(best[1]) : '';
+      stats.growthBars = yearBars(years);
+      html += '§growth§' + label('Depuis le début', fmt(F.size) + ' abonnés') + `<div class="panel">
+        <div class="panel-head"><span class="panel-title">Tes abonnés, année par année</span></div>
+        ${yearBars(years)}
+        <p class="big-cap">Selon l'année où chaque abonné actuel t'a suivi. Meilleure année : <b>${best ? best[0] + ' (+' + fmt(best[1]) + ')' : '—'}</b>. Ton plus ancien abonné encore là te suit depuis le <b>${dateFr(oldest)}</b>.</p>
+      </div>`;
+      const loyal = [...F].filter(([u,v])=>v.ts).sort((a,b)=>a[1].ts-b[1].ts).slice(0, 200).map(([u,v])=>({ u, ts:v.ts, meta:'te suit depuis le ' + dateFr(v.ts) }));
+      const fans = [...F].filter(([u])=>!Gl.has(low(u)) && !isGhost(u)).sort((a,b)=>(b[1].ts||0)-(a[1].ts||0)).map(([u,v])=>({ u, ts:v.ts, meta:'te suit depuis le ' + dateFr(v.ts) }));
+      html += rows([
+        reg('loyal', cat('Les plus fidèles', "Tes abonnés les plus anciens qui te suivent toujours.", 'lime', { empty:'Pas encore de données.' }), loyal),
+        reg('fans', cat('Te suivent, tu ne les suis pas', "Ils te suivent mais tu ne les suis pas en retour. Les plus récents d'abord.", 'ink', { empty:'Tu suis tous tes abonnés.' }), fans)
+      ]);
+
+      /* Réciprocité */
+      const mutual = [], Gmap = new Map([...G].map(([k,v])=>[low(k), v]));
+      F.forEach((v,u)=>{ const g = Gmap.get(low(u)); if(g && v.ts && g.ts) mutual.push({ u, ft:v.ts, gt:g.ts }); });
+      if(mutual.length){
+        const youFirst = mutual.filter(m=>m.gt < m.ft), themFirst = mutual.filter(m=>m.gt >= m.ft);
+        const pct = Math.round(youFirst.length / mutual.length * 100);
+        const med = arr => { const d = arr.map(m=>Math.abs(m.ft-m.gt)).sort((a,b)=>a-b); return d.length ? d[Math.floor(d.length/2)] : 0; };
+        stats.recip = pct + ' % suivis par toi d\'abord';
+        html += '§recip§' + label('Réciprocité', fmt(mutual.length) + ' mutuels') + `<div class="panel">
+          <div class="big">${pct}<span style="font-size:.45em">%</span></div>
+          <p class="big-cap">des abonnements réciproques, c'est <b>toi qui as suivi en premier</b>. En général, on te suit en retour en <b>${dur(med(youFirst))}</b> ; toi, tu suis en retour en <b>${dur(med(themFirst))}</b>. <b>${Math.round(mutual.filter(m=>Math.abs(m.ft-m.gt) < 86400).length / mutual.length * 100)} %</b> se sont suivis en retour en moins d'un jour.</p>
+        </div>` + rows([
+          reg('slowBack', cat('Ont mis le plus de temps à te suivre', "Tu les as suivis en premier. Triés par le temps qu'ils ont mis à te suivre en retour.", 'rose'),
+            youFirst.sort((a,b)=>(b.ft-b.gt)-(a.ft-a.gt)).map(m=>({ u:m.u, ts:m.ft, meta:'en retour après ' + dur(m.ft-m.gt) }))),
+          reg('youSlow', cat('Tu as mis le plus de temps', "Ils t'ont suivi en premier. Triés par le temps que tu as mis à les suivre en retour.", 'mute'),
+            themFirst.sort((a,b)=>(b.gt-b.ft)-(a.gt-a.ft)).map(m=>({ u:m.u, ts:m.gt, meta:'tu as suivi après ' + dur(m.gt-m.ft) })))
+        ]);
+      }
+    }
+
+    /* Relations */
+    const L = X.lists;
+    if(L){
+      const mk = arr => (arr || []).map(([u,ts])=>({ u, ts, meta:ts ? dateFr(ts) : '' }));
+      const keys = [];
+      if(L.pending) keys.push(reg('pending', cat('Demandes en attente', "Comptes privés à qui tu as demandé de suivre et qui n'ont jamais accepté.", 'rose', { empty:'Aucune demande en attente.' }), mk(L.pending).map(x=>({ ...x, meta:'demandé le ' + dateFr(x.ts) }))));
+      if(L.recentRequests) keys.push(reg('recentRequests', cat('Demandes envoyées récemment', "Les demandes d'abonnement que tu as envoyées récemment.", 'ink'), mk(L.recentRequests)));
+      if(L.myUnfollows) keys.push(reg('myUnfollows', cat('Tes unfollows récents', "Les comptes que tu as arrêté de suivre récemment, d'après Instagram.", 'mute'), mk(L.myUnfollows).map(x=>({ ...x, meta:'unfollow le ' + dateFr(x.ts) }))));
+      if(L.closeFriends && n) keys.push(reg('cfNo', cat('Amis proches qui ne te suivent pas', "Dans ta liste d'amis proches, mais absents de tes abonnés.", 'rose', { empty:'Tous tes amis proches te suivent.' }), mk(L.closeFriends).filter(x=>!Fl.has(low(x.u)))));
+      if(L.closeFriends) keys.push(reg('closeFriends', cat('Amis proches', "Ta liste d'amis proches.", 'lime'), mk(L.closeFriends)));
+      if(X.renamedSure && X.renamedSure.length) keys.push(reg('renamedSure', cat('Pseudos changés (certain)', "Repérés grâce à l'identifiant fixe du compte dans tes exports.", 'lime'), X.renamedSure.map(([from,to,d])=>({ u:to, from, meta:'avant : @' + from }))));
+      if(L.blocked) keys.push(reg('blocked', cat('Comptes bloqués', "Les comptes que tu as bloqués.", 'mute'), mk(L.blocked)));
+      if(L.restricted) keys.push(reg('restricted', cat('Comptes restreints', "Les comptes que tu as restreints.", 'mute'), mk(L.restricted)));
+      stats.relations = L.pending ? fmt(L.pending.length) + ' demandes en attente' : fmt(keys.length) + ' listes';
+      html += '§relations§' + label('Relations', X.removedSuggestions ? fmt(X.removedSuggestions) + ' suggestions masquées' : '') + rows(keys);
+    } else {
+      html += '§relations§' + label('Relations') + locked(`Demandes en attente, tes unfollows, amis proches… sont dans <b>Followers et suivi(e)s</b> : ajoute le .zip complet de l'export.`);
+    }
+
+    /* Activité */
+    const acts = [['likes',"J'aime",'Les comptes dont tu likes le plus les posts'],['comments','Commentaires','Là où tu commentes le plus'],['stories','Stories','Les stories auxquelles tu réagis le plus'],['saved','Enregistrements','Les comptes dont tu enregistres le plus de posts'],['searches','Recherches','Les comptes que tu cherches le plus']];
+    const haveAct = acts.filter(([k])=>X[k]);
+    stats.activity = X.likes ? fmt(X.likes.total) + ' J\'aime' : haveAct.length ? haveAct.length + ' catégories' : '';
+    html += '§activity§' + label('Ton activité', haveAct.length ? '' : 'à débloquer');
+    if(!haveAct.length) html += locked(`Coche <b>Mentions J'aime</b>, <b>Commentaires</b>, <b>Interactions avec les stories</b>, <b>Enregistrements</b> et <b>Recherches récentes</b> à l'export pour voir les comptes avec qui tu interagis le plus.`);
+    haveAct.forEach(([k,title,sub])=>{
+      const d = X[k];
+      html += `<div class="panel"><div class="panel-head"><span class="panel-title">${title}</span><span class="bl-n">${fmt(d.total)} au total</span></div>
+        <p class="big-cap" style="margin-top:4px">${sub}.</p>
+        ${barList(d.top.slice(0,6).map(([u,c,l])=>({ name:'@'+u, u, v:c, sub:Fl.size && !Fl.has(low(u)) ? 'ne te suit pas' : '' })))}
+      </div>`;
+      const keys = [reg(k+'All', cat(title + ' — tous', sub + '.', 'ink'), d.top.map(([u,c,l])=>({ u, ts:l, meta:fmt(c) + ' fois · dernière le ' + dateFr(l) })))];
+      if(n && (k === 'likes' || k === 'stories' || k === 'comments')){
+        keys.push(reg(k+'NoBack', cat(k === 'likes' ? 'Tu likes, ils ne te suivent pas' : k === 'stories' ? 'Tu réagis, ils ne te suivent pas' : 'Tu commentes, ils ne te suivent pas',
+          "Tu interagis avec eux, mais ils ne font pas partie de tes abonnés.", 'rose', { empty:'Tous te suivent en retour.' }),
+          d.top.filter(([u])=>!Fl.has(low(u))).map(([u,c,l])=>({ u, ts:l, meta:fmt(c) + ' fois' }))));
+      }
+      html += rows(keys);
+    });
+
+    /* Messages */
+    const M = X.messages;
+    stats.messages = M ? fmt(M.count) + ' conversations' : '';
+    html += '§messages§' + label('Messages', M ? fmt(M.total) + ' messages' : 'à débloquer');
+    if(!M){
+      html += locked(`Coche <b>Messages</b> à l'export pour voir avec qui tu parles le plus, qui écrit en premier, et les conversations qui se sont éteintes.`);
+    } else {
+      const solo = M.threads.filter(t=>t.o);
+      const started = solo.length ? Math.round(solo.filter(t=>t.s).length / solo.length * 100) : 0;
+      const sent = M.threads.reduce((a,t)=>a+t.m, 0);
+      html += `<div class="panel">
+        <div class="stat3"><div><b>${fmt(M.count)}</b><span>conversations</span></div><div><b>${M.total ? Math.round(sent/M.total*100) : 0}%</b><span>écrits par toi</span></div><div><b>${started}%</b><span>lancées par toi</span></div></div>
+        ${barList(M.threads.slice(0,8).map(t=>({ name:t.n, u:t.o && USERNAME.test(t.u) ? t.u : '', v:t.c, split:t.m })))}
+        <div class="legend"><span><i style="background:var(--ink)"></i>toi</span><span><i style="background:var(--lime); box-shadow:inset 0 0 0 1px rgba(26,20,18,.2)"></i>l'autre</span></div>
+      </div>`;
+      const nowS = Date.now()/1000;
+      html += rows([
+        reg('msgTop', cat('Toutes tes conversations', "Classées par nombre de messages.", 'ink', { unit:['conversation','conversations'] }),
+          M.threads.map(t=>({ u:t.u || t.n, label:t.n, nolink:!(t.o && USERNAME.test(t.u)), ts:t.l, meta:fmt(t.c) + ' messages · ' + Math.round(t.m/t.c*100) + '% par toi' }))),
+        reg('msgDead', cat('Conversations éteintes', "Des conversations importantes (50 messages ou plus) sans aucun message depuis 3 mois.", 'mute', { unit:['conversation','conversations'], empty:'Aucune conversation éteinte.' }),
+          M.threads.filter(t=>t.c >= 50 && nowS - t.l > 90*86400).sort((a,b)=>b.c-a.c).map(t=>({ u:t.u || t.n, label:t.n, nolink:!(t.o && USERNAME.test(t.u)), ts:t.l, meta:'dernier message il y a ' + dur(nowS - t.l) }))),
+        reg('msgYouStart', cat("C'est toujours toi qui écris", "Conversations à deux que tu as lancées, où tu écris plus de 60 % des messages.", 'rose', { unit:['conversation','conversations'] }),
+          solo.filter(t=>t.s && t.c >= 20 && t.m/t.c > .6).map(t=>({ u:t.u || t.n, label:t.n, nolink:!USERNAME.test(t.u), ts:t.l, meta:Math.round(t.m/t.c*100) + '% des messages viennent de toi' })))
+      ].concat(n ? [reg('msgNoBack', cat('Tu leur parles, ils ne te suivent pas', "Conversations à deux avec des comptes absents de tes abonnés (d'après le nom du dossier de la conversation).", 'rose', { unit:['conversation','conversations'] }),
+          solo.filter(t=>USERNAME.test(t.u) && !Fl.has(low(t.u))).map(t=>({ u:t.u, label:t.n, ts:t.l, meta:fmt(t.c) + ' messages · @' + t.u })))] : []));
+    }
+
+    /* Compte */
+    const A = X.account || {};
+    stats.account = A.logins ? fmt(A.logins.n) + ' connexions' : Object.keys(A).length ? 'profil, pubs, sujets' : '';
+    html += '§account§' + label('Ton compte', Object.keys(A).length ? '' : 'à débloquer');
+    if(!Object.keys(A).length){
+      html += locked(`Coche <b>Modifications</b>, <b>Connexion et création de profil</b>, <b>Historique des liens</b>, <b>Vos sujets</b> et <b>Publicités</b> à l'export pour voir l'historique de ton profil, tes connexions, et ce qu'Instagram sait de toi.`);
+    } else {
+      if(A.posts || A.myStories){
+        html += `<div class="panel"><div class="panel-head"><span class="panel-title">Tes publications</span><span class="bl-n">${A.posts ? fmt(A.posts.reduce((a,p)=>a+p[1],0)) + ' posts' : ''}${A.myStories ? ' · ' + fmt(A.myStories.reduce((a,p)=>a+p[1],0)) + ' stories' : ''}</span></div>${yearBars(A.posts || A.myStories)}</div>`;
+      }
+      if(A.logins){
+        html += `<div class="panel"><div class="panel-head"><span class="panel-title">Connexions</span><span class="bl-n">${fmt(A.logins.n)} enregistrées</span></div>
+          <p class="big-cap" style="margin-top:4px">Dernière le <b>${dateFr(A.logins.last)}</b>.</p>
+          <div class="tagcloud">${A.logins.devices.map(([d,c])=>`<span class="tag">${esc(d)}<b>${fmt(c)}</b></span>`).join('')}${A.logins.places.map(([d,c])=>`<span class="tag">${esc(d)}<b>${fmt(c)}</b></span>`).join('')}</div></div>`;
+      }
+      if(A.topics && A.topics.length){
+        html += `<div class="panel"><div class="panel-head"><span class="panel-title">Ce qu'Instagram pense que tu aimes</span><span class="bl-n">${fmt(A.topics.length)}</span></div>
+          <div class="tagcloud">${A.topics.slice(0,40).map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div></div>`;
+      }
+      if(A.links && A.links.length){
+        html += `<div class="panel"><div class="panel-head"><span class="panel-title">Sites ouverts depuis Instagram</span></div>${barList(A.links.slice(0,6).map(([d,c])=>({ name:d, v:c })))}</div>`;
+      }
+      if(A.insights && A.insights.length){
+        html += `<div class="panel"><div class="panel-head"><span class="panel-title">Anciennes statistiques</span></div>
+          <div class="tagcloud">${A.insights.slice(0,16).map(([k,v])=>`<span class="tag">${esc(k)}<b>${esc(v)}</b></span>`).join('')}</div></div>`;
+      }
+      const keys = [];
+      if(A.changes) keys.push(reg('changes', cat('Historique de ton profil', "Les changements de pseudo, de nom, de bio… enregistrés par Instagram.", 'lime', { unit:['modification','modifications'] }),
+        A.changes.map(([t,txt])=>({ u:txt, label:txt, nolink:true, ts:t, meta:dateFr(t) }))));
+      if(A.advertisers) keys.push(reg('advertisers', cat('Annonceurs qui ont tes données', "Les annonceurs qui ont utilisé ton activité ou tes informations pour te cibler.", 'mute', { unit:['annonceur','annonceurs'] }),
+        A.advertisers.map(a=>({ u:a, label:a, nolink:true }))));
+      if(A.topics) keys.push(reg('topics', cat("Tes sujets selon Instagram", "Les centres d'intérêt qu'Instagram t'attribue pour te recommander du contenu.", 'lime', { unit:['sujet','sujets'] }),
+        A.topics.map(a=>({ u:a, label:a, nolink:true }))));
+      if(keys.length) html += rows(keys);
+    }
+
+    html += '§end§' + `<div class="add-cta"><button class="btn" data-go="screen-upload">Ajouter un export <span class="arrow">→</span></button></div>`;
+
+    // Hub : une tuile par rubrique, chaque rubrique sur sa propre page.
+    const segs = html.split(/§(\w+)§/);
+    SECTIONS = {};
+    for(let i = 1; i < segs.length; i += 2) SECTIONS[segs[i]] = segs[i+1];
+    const ICO = {
+      growth:'<path d="M4 19h16"/><path d="M6 15l4-4 3 3 5-6"/>',
+      recip:'<path d="M7 7h11l-3-3"/><path d="M17 17H6l3 3"/>',
+      relations:'<circle cx="9" cy="8" r="3.5"/><path d="M3 20c.8-3.5 3.2-5 6-5s5.2 1.5 6 5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7"/><path d="M18 15c1.6.6 2.6 2.2 3 5"/>',
+      activity:'<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',
+      messages:'<path d="M4 5h16v11H9l-5 4z"/>',
+      account:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4.2-6 8-6s7 2 8 6"/>'
+    };
+    const HUB = [
+      ['growth','Croissance','Tes abonnés depuis le début',''],
+      ['recip','Réciprocité','Qui suit qui en premier','lime'],
+      ['relations','Relations','Demandes, unfollows, amis proches',''],
+      ['activity','Activité',"J'aime, commentaires, recherches",'rose'],
+      ['messages','Messages','Avec qui tu parles',''],
+      ['account','Ton compte','Profil, connexions, pubs','']
+    ].filter(([k])=>SECTIONS[k] !== undefined);
+    box.innerHTML = `<div class="hub">${HUB.map(([k,t,sub,tone],i)=>{
+      const off = !stats[k];
+      const cls = k === 'growth' ? 'wide' : off ? 'off' : tone;
+      return `<button class="hub-tile ${cls}" data-sec="${k}" style="animation-delay:${i*50}ms">
+        <span class="hub-top"><span class="hub-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICO[k]}</svg></span><span class="hub-arrow">›</span></span>
+        ${k === 'growth' ? stats.growthBars || '' : ''}
+        <span><span class="hub-title">${t}</span><span class="hub-stat">${off ? 'à débloquer' : stats[k]}</span>${k === 'growth' ? '' : `<span class="hub-sub">${sub}</span>`}</span>
+      </button>`;
+    }).join('')}</div>` + (SECTIONS.end || '');
+    box.querySelectorAll('[data-sec]').forEach(b=> b.addEventListener('click', ()=> openSection(b.dataset.sec)));
+    bindGo(box);
+    HUB_TITLES = Object.fromEntries(HUB.map(([k,t])=>[k,t]));
+    if(current === 'screen-section' && SECTIONS[secKey] !== undefined) fillSection(secKey);
+  }
+  let SECTIONS = {}, HUB_TITLES = {}, secKey = '';
+  function fillSection(k){
+    secKey = k;
+    const t = HUB_TITLES[k] || '';
+    $('sec-title').innerHTML = t.length > 6 ? esc(t.slice(0, Math.ceil(t.length/2))) + '<em>' + esc(t.slice(Math.ceil(t.length/2))) + '.</em>' : '<em>' + esc(t) + '.</em>';
+    $('sec-sub').textContent = '';
+    const body = $('sec-body');
+    body.innerHTML = SECTIONS[k] || '';
+    body.querySelectorAll('[data-list]').forEach(b=> b.addEventListener('click', ()=> showList(b.dataset.list)));
+    bindGo(body);
+    body.querySelectorAll('[data-count]').forEach(el=>{ if(el.dataset.count !== '') countUp(el, +el.dataset.count); });
+  }
+  function openSection(k){ fillSection(k); go('screen-section', 'push'); }
+  function showList(key){
+    const L = LISTS[key]; if(!L) return;
+    CATS[key] = L.cat; diffs[key] = L.items; EMPTY[key] = L.cat.empty || 'Rien ici.';
+    openDetail(key);
+  }
+
   /* ── détail ── */
   function openDetail(k){
     tab = k;
     $('d-title').textContent = CATS[k].label;
     $('d-dot').style.cssText = 'background:' + CATS[k].dot;
     const n = (diffs[k]||[]).length;
-    $('d-count').textContent = fmt(n) + (n>1 ? ' comptes' : ' compte');
+    const unit = CATS[k].unit || ['compte','comptes'];
+    $('d-count').textContent = fmt(n) + ' ' + (n>1 ? unit[1] : unit[0]);
     $('d-desc').textContent = CATS[k].desc;
     $('q').value = ''; $('sort').value = 'default';
     renderPeople();
-    go('screen-detail', 'push');
+    if(current !== 'screen-detail') go('screen-detail', 'push');
+    else { renderPeople(); updateChrome(); }
   }
   function renderPeople(){
     const q = $('q').value.trim().toLowerCase();
     const order = $('sort').value;
-    let list = (diffs[tab]||[]).filter(x=>!q || x.u.toLowerCase().includes(q) || (x.from && x.from.toLowerCase().includes(q)));
+    let list = (diffs[tab]||[]).filter(x=>!q || x.u.toLowerCase().includes(q) || (x.label && x.label.toLowerCase().includes(q)) || (x.from && x.from.toLowerCase().includes(q)));
     list = [...list];
-    if(order==='az') list.sort((a,b)=>a.u.localeCompare(b.u));
-    else if(order==='za') list.sort((a,b)=>b.u.localeCompare(a.u));
+    if(order==='az') list.sort((a,b)=>(a.label||a.u).localeCompare(b.label||b.u));
+    else if(order==='za') list.sort((a,b)=>(b.label||b.u).localeCompare(a.label||a.u));
     else if(order==='recent') list.sort((a,b)=>(b.ts||0)-(a.ts||0));
     else if(order==='oldest') list.sort((a,b)=>(a.ts||0)-(b.ts||0));
 
@@ -1148,13 +1830,14 @@
       el.className = 'person'; el.style.animationDelay = Math.min(i*14,420)+'ms';
       const href = 'https://www.instagram.com/' + encodeURIComponent(p.u) + '/';
       el.innerHTML = `
-        <span class="person-av" style="background:${c.av}; color:${c.avInk}">${esc(p.u.replace(/^_+/,'').slice(0,2).toUpperCase())}</span>
+        <span class="person-av" style="background:${c.av}; color:${c.avInk}">${esc((p.label || p.u).replace(/^[_@\s]+/,'').slice(0,2).toUpperCase())}</span>
         <span class="person-body">
-          <span class="person-handle">@${esc(p.u)}</span>
-          ${p.from ? `<span class="person-date">avant : @${esc(p.from)}</span>`
+          <span class="person-handle">${p.label ? esc(p.label) : '@' + esc(p.u)}</span>
+          ${p.meta ? `<span class="person-date">${esc(p.meta)}</span>`
+            : p.from ? `<span class="person-date">avant : @${esc(p.from)}</span>`
             : p.ts ? `<span class="person-date">${human(new Date(p.ts*1000).toISOString())}</span>` : ''}
         </span>
-        ${isGhost(p.u) ? '' : `<a class="person-go" href="${esc(href)}" target="_blank" rel="noopener" aria-label="Ouvrir le profil"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"/><path d="M8 7h9v9"/></svg></a>`}`;
+        ${isGhost(p.u) || p.nolink ? '' : `<a class="person-go" href="${esc(href)}" target="_blank" rel="noopener" aria-label="Ouvrir le profil"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"/><path d="M8 7h9v9"/></svg></a>`}`;
       frag.appendChild(el);
     });
     wrap.appendChild(frag);
@@ -1163,10 +1846,11 @@
   $('sort').addEventListener('change', renderPeople);
 
   /* ── navigation ── */
-  const SCREENS = ['screen-home','screen-upload','screen-tuto','screen-detail'];
-  const TABS = { 'screen-home':0, 'screen-detail':0, 'screen-upload':1, 'screen-tuto':2 };
-  const TITLES = { 'screen-home':'Tableau de bord', 'screen-upload':'Nouvel export', 'screen-tuto':'Guide' };
+  const SCREENS = ['screen-home','screen-explore','screen-section','screen-upload','screen-tuto','screen-detail'];
+  const TABS = { 'screen-home':0, 'screen-explore':1, 'screen-upload':2, 'screen-tuto':2 };
+  const TITLES = { 'screen-home':'Tableau de bord', 'screen-explore':'Explorer', 'screen-upload':'Nouvel export', 'screen-tuto':'Guide' };
   let current = 'screen-home';
+  let stack = [];   // écrans précédents, pour le bouton retour
 
   function animate(el, cls){
     el.classList.remove('screen-anim','screen-anim-back','screen-push');
@@ -1175,10 +1859,12 @@
   }
   function updateChrome(){
     const tb = $('topbar');
-    tb.classList.toggle('is-sub', current === 'screen-detail');
+    tb.classList.toggle('is-sub', stack.length > 0);
+    const back = stack[stack.length-1];
+    $('tb-back').querySelector('span').textContent = back === 'screen-section' ? (HUB_TITLES[secKey] || 'Retour') : ({ 'screen-home':'Accueil', 'screen-explore':'Explorer', 'screen-upload':'Ajouter' }[back] || 'Retour');
     tb.classList.toggle('on-upload', current === 'screen-upload');
-    $('tb-title').textContent = current === 'screen-detail' ? CATS[tab].label : TITLES[current];
-    const i = TABS[current];
+    $('tb-title').textContent = current === 'screen-detail' ? CATS[tab].label : current === 'screen-section' ? (HUB_TITLES[secKey] || '') : TITLES[current];
+    const i = TABS[current] != null ? TABS[current] : TABS[stack[0]] != null ? TABS[stack[0]] : 0;
     $('tab-ind').style.setProperty('--i', i);
     document.querySelectorAll('.tab').forEach((t,k)=> t.classList.toggle('active', k === i));
     observeTitle();
@@ -1186,7 +1872,9 @@
   // dir : 'tab' (fondu), 'push' (glisse vers la gauche), 'pop' (retour)
   function go(id, dir){
     dir = dir || 'tab';
-    if(id === current){ window.scrollTo({top:0, behavior:'smooth'}); return; }
+    if(dir === 'tab'){ if(id === current && !stack.length){ window.scrollTo({top:0, behavior:'smooth'}); return; } stack = []; }
+    else if(id === current){ window.scrollTo({top:0, behavior:'smooth'}); return; }
+    else if(dir === 'push') stack.push(current);
     const apply = ()=>{
       SCREENS.forEach(s=> $(s).style.display = s === id ? 'block' : 'none');
       current = id;
@@ -1230,7 +1918,7 @@
   document.querySelectorAll('.tab').forEach(t=>{
     t.addEventListener('click', ()=>{ haptic(); go(t.dataset.to, 'tab'); });
   });
-  $('tb-back').addEventListener('click', ()=> go('screen-home', 'pop'));
+  $('tb-back').addEventListener('click', ()=> go(stack.pop() || 'screen-home', 'pop'));
   $('tb-add').addEventListener('click', ()=> go('screen-upload', 'tab'));
   $('open-tuto').addEventListener('click', ()=> go('screen-tuto', 'tab'));
   $('tuto-done').addEventListener('click', ()=> go('screen-upload', 'tab'));
@@ -1240,6 +1928,7 @@
   loadHistory();
   computeDiffs();
   renderHome();
+  renderExplore();
   renderUpload();
   updateChrome();
 

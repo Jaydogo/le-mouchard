@@ -6,9 +6,9 @@ L'app lit l'export officiel de tes données Instagram (format JSON) directement 
 
 ## Utilisation
 
-1. **Ajouter** : la première fois, un ancien export et un récent. Ensuite le dernier est mémorisé, il suffit d'ajouter le nouveau.
-2. **Accueil** : abonnés, évolution, partis / arrivés, sans retour, fantômes, historique des exports.
-3. **Guide** : comment demander l'export à Instagram.
+1. **Ajouter** : choisis le .zip de l'export Instagram (ou les fichiers .json). Le dernier export est mémorisé, il suffit ensuite d'ajouter le nouveau. Le .zip est lu dans le navigateur, rien n'est envoyé.
+2. **Accueil** : abonnés, évolution, partis / arrivés, sans retour, fantômes, faux départs (pseudos changés, comptes disparus ou revenus), historique.
+3. **Explorer** : croissance depuis le début, réciprocité, relations (demandes en attente, tes unfollows, amis proches), activité (J'aime, commentaires, stories, enregistrements, recherches), messages, infos du compte.
 
 ## Installer sur le téléphone
 
